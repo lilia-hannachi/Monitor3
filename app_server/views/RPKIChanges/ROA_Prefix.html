@@ -1,0 +1,144 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+
+    <!--Main layout-->
+    <main>
+      <div class="container-fluid">
+         <article class="content cards-page"  id="divs_list">
+		<script>
+		        document.getElementById('RPKI_changes_menu').className += " active";
+		        var data = <%- data %>;
+		        var time = '<%- Time %>';
+		        var origin = '<%- Origin %>';
+			var prefix = '<%- Prefix %>';
+			var from = <%- From %>;
+			var to =  <%- To %>;
+
+			/*      List of selections      */
+                	var main_div = document.getElementById("divs_list");
+			main_div.innerHTML += changes_ROA_Table("");
+
+			
+			var main_Bar = "Chart", bar_Chart = "div_Chart", main_Prefixes = "Prefixes", tab_div = "table";
+			var perPage = 30;
+
+			/* Get data Function	*/
+			
+			function getButton(class_name, val)
+        		{
+       				return "<button style='padding:0.5rem' type='button' class='btn btn-rounded btn-sm "+class_name+"'>"+val+"</button>";
+        		}
+
+			function initTable()
+        		{
+                		return "<table class='table'><thead class='thead-dark text-center'> <tr><B><th colspan=5> ROA Data relevant to Prefix : "+prefix+" and Origin: "+origin+" on "+time_format(time)+"</th></tr> <tr><B><th> PREFIX </th> <th> Matching </th><th> AS Number </th><th>Max Length</th><th>SKI</th></B></tr></thread>";
+        		}
+	
+			function nextPage(current)
+        		{
+                		generateTable(current);
+        		}
+
+
+			function generateCounter(total, current)
+		        {
+                		var pages = Math.ceil(total / perPage);
+		                var counter = '';
+                		if (pages > 0)
+                		{
+		                        counter =' <ul class="pagination">';
+                		        if (current == 1) {
+                                		counter +='<li class="page-item disabled"><a class="page-link">First</a></li>';
+                        		}
+                        		else
+                        		{
+		                                counter +='<li class="page-item" onclick="nextPage(1)"><a class="page-link"> First </a></li>';
+                		        }
+                        		var i = (current > 5 ? current - 4 : 1)
+		                        if (i !== 1)
+                		        {
+                                		counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                        		}
+		                        for (; i <= (current + 4) && i <= pages; i++)
+                		        {
+                                		if (i == current)
+                                		{
+                                        		counter +='<li class="page-item active"><a class="page-link">'+i+'</a></li>';
+                                		}
+                                		else
+                                		{
+                                        		counter +='<li class="page-item"><a class="page-link" onclick="nextPage('+i+')">'+i+'</a></li>';
+                                		}
+                                		if (i == current + 4 && i < pages)
+                                		{
+                                        		counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                		}
+                        		}
+                        		if (current == pages)
+                        		{
+		                                counter +='<li class="page-item disabled"><a class="page-link">Last</a></li>';
+                		        }
+		                        else
+                		        {
+                                		counter +='<li class="page-item"><a class="page-link" onclick="nextPage('+pages+')">Last</li>';
+                        		}
+		                        counter +='</ul>';
+                		}
+                		return counter;
+        		}
+			
+
+			function generateTable(current)
+        		{
+           			var table = initTable();
+           			var init = (perPage * current) - perPage;
+           			var end = init + perPage;
+           			var maxVal = (data.length > end) ? end : data.length;
+           			for(var i=init; i< maxVal; i++)
+           			{
+                			var prefix_str = data[i]["Pr"];
+                			var ml = data[i]["ML"];
+					var ski = data[i]["SKI"];
+					var as = data[i]["AS"];
+					var fr_I = data[i]["Fr"];
+					var to_I = data[i]["To"];
+					var tr = "<tr> <td> "+prefix_str+" </td>";
+					tr += (prefix_str == prefix) ? "<td> "+getButton("btn-success", "Match")+" </td>" : ((fr_I <= from && to_I>= to) ? "<td> "+getButton("btn-danger", "Les_Specific")+" </td>" : "<td> "+getButton("btn-danger", "More_Specific")+" </td>")
+					tr += (as == origin) ? "<td> "+getButton("btn-success", as)+" </td>" : "<td> "+getButton("btn-danger", as)+" </td>";
+					tr += "<td> "+ml+" </td>";
+					tr += "<td> {"+ski.split("|").join(",")+"} </td>";
+					tr += "</tr>";
+                			table +=tr;
+				}
+				table += "</table>";
+           			d3.select("#"+tab_div).html(table + generateCounter(data.length, current));
+                         }
+
+
+			function sort_By_AS(a, b)
+        		{
+                		return a.AS - b.AS;
+        		}
+			
+			/* Sort Data by AS      */
+                        if(Object.keys(data).length>0)
+                        {
+                                data = data.sort(sort_By_AS);
+                                document.getElementById(main_Prefixes).style.display = "block";
+                                generateTable(1);
+                        }
+			else
+			{
+				alert("No Available data for the selected Date");
+			}
+	       </script>
+         </article>
+         <div style="height:500px"></div>
+      </div>
+    </main>
+    <!--/Main layout-->
+    <% include ../Footer.html %>
+
+

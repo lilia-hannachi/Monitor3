@@ -1,0 +1,75 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+		document.getElementById('coverage_menu').className += " active";
+                // Get MongoDB Data
+                var invalid_Data = <%- data %>;
+                var version = '<%- version %>';
+                var time = '<%- time %>';
+                var origin = '<%- origin %>';
+		var rir = '<%- rir %>';
+		var invalids = '<%- invalids %>';
+                var time_str = time_format(time);
+		var rirArray = {"All":"All", "A":"ARIN", "R":"RIPE", "P":"APNIC", "L":"LACNIC", "F":"AFRINIC"};
+		var Validation = {"IM":"Invalid:ML", "IS":"Invalid:AS", "ISM":"invalid:AS-ML"};
+
+		/*  List of functions  */
+                function generateTable()
+                {
+                        var data = invalid_Data[0]["val1"];
+                        var Validation_col = {"IM":"btn btn-deep-purple", "IS":"btn-mdb-color", "ISM":"btn-unique"};
+			var table = "";
+			if(data.length == 0)
+			{
+                        	table = "<br/><B> There are no invalid Prefixes for the selected Origin</br></B><br/>";
+			}
+			else
+			{
+				table = "<table class='table table-bordered'><thead><tr> <th><B>Prefix</B></th> <th><B>Origin</B></th> <th><B>Region</B></th> <th><B>Validation</B></th> <th><B>Path Count</B></th> <th><B>Covered</B></th></tr></thead><tbody>";
+                                for(var i = 0; i < data.length; i++)
+                                {
+                                        table += "<tr><td>"+data[i].Pr+"</td><td>"+data[i].O+"</td><td>"+rirArray[data[i].R]+"</td>"+getValValue(Validation[data[i].V], Validation_col[data[i].V])+"<td>"+data[i].PC+"</td>";
+                                            if(data[i].C == "Y")
+                                        {
+                                                    table += "<td><button type='button' class='btn btn-rounded btn-success btn-sm'> <a href=\'/CovPr/"+time+"/"+version+"/"+(data[i].Pr).replace("/", "_")+"\' >YES </a> </button></td></tr>";
+                                        }
+                                        else{
+                                                    table += "<td><button type='button' class='disabled btn btn-rounded btn-danger btn-sm'>NO</button></td></tr>";
+                                        }
+                                }
+                        	table += "</tbody> </table>";
+			}
+                        return table
+                }
+
+
+		/*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                var divs = coverage_Invalid_div(version, rir, invalids, time);
+                /*  Title data of selected page     */
+		var str = (origin=="0" ? "" : " AS"+origin);
+                var title_param = {"title":"Invalid Prefix-Origin Pairs: "+str, "version":"IPv"+version, "col":"All", "rir":rirArray[rir], "time":time_str};
+                divs += page_title(title_param);
+
+                main_div.innerHTML += divs;
+
+                main_div.innerHTML += table_div('div1');
+                document.getElementById("div1").innerHTML = generateTable() ;
+
+                $('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

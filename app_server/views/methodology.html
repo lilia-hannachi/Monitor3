@@ -1,0 +1,658 @@
+<script>
+        var lastUpdate = "<%- lastUpdate %>";
+</script>
+
+<% include ./Page_Header.html %>   
+
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+        
+        
+                <!-- ********************************   Methodology ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>RPKI Monitor 2.0</strong></h4>
+                    <h5 class="blue-text  text-center"><strong>Overview</strong></h5>
+
+                    <p> The adoption of Resource Public Key Infrastructure (RPKI) is growing. RPKI facilitates the validation of Border Gateway Protocol (BGP) announcements and assists in preventing Internet route hijacks and other routing anomalies. The relying parties (RPs) who make use of RPKI data expect it to be fully reliable but the global RPKI is subject to daily churn, human errors, system comprise, and potentially malicious manipulations. It is useful to monitor the dynamics of the RPKI and their impact on Internet routing. Such a monitor can give significant feedback to the RPs which include corporations, network operators, government agencies, and educational institutions. For this purpose, we have developed a Big Data Analytics software platform for monitoring and analyzing both RPKI repository data and BGP routing data collected by dozens of collectors world-wide. The platform makes use of the latest Big Data tools such as Hadoop, Pig, and MongoDB. It incorporates BGP route validation using RPKI Route Origin Validation (ROA) objects. It is essentially an advanced and high-performance monitoring and analysis tool that presents many insights related to the dynamics of BGP routes (vis-a-vis Validity status) and RPKI certificates and ROA objects.  <br/> </p>
+
+                   
+                   <div class="call-to-action my-4">                     
+                          <h5 class="blue-text"> Overview of the measurements and visualizations provided by the monitor </h5>
+                     
+                     <table class="table table-sm">
+                          <tbody>
+                            <!--First TR -->
+                            <tr>
+                              <th scope="row"><B>RPKI-ROV Analysis</B></th>
+                              <td>
+                                <ul class="list-unstyled">
+                                        <li>Shows historical data in addition to current snapshots of Route Origin Validation results for both IPV4 and IPV6.</li>
+                                        <li>Illustrates Route Origin Validation changes over time.</li>
+                                        <li>Displays insights and characterization of routes that are found <i>Invalid, Valid,</i> or <i>Not-Found.</i></li>
+                                        <li>Gives several statistics about coverage analysis of invalid pre?xes.</li>
+                                </ul>
+                              </td>
+                            </tr>
+                            <!--Second TR -->
+                            <tr>
+                              <th scope="row"><B>RPKI Data Analysis</B></th>
+                              <td>                              
+                                <ul class="list-unstyled">
+                                    <li>Allows monitoring and inspection of validated RPKI objects.</li>
+                                    <li>Shows historical data in addition to current snapshots.</li>
+                                    <li>Gives several statistics about the repositories.</li>
+                                </ul></td>
+                            </tr>
+                            <!--Third TR -->
+                            <tr>
+                              <th scope="row"><B>BGP Analysis</B></th>
+                              <td>
+                                <ul class="list-unstyled">
+                                    <li>Allows monitoring and inspection of BGP Data.</li>
+                                    <li>Provides detailed customer cone information.</li>
+                                    <li>Displays BGP analysis from many perspectives: (a) per Regional Internet Registry (RIR), (b) per Collector, (c) global, etc. </li>
+                                </ul>
+                              </td>
+                            </tr>
+                            
+                          <tbody>
+                     </table>
+                   </div>
+
+                </div>
+                <!--Card content-->
+            </div>
+
+	 <!-- ********************************   RPKI-ROV Analysis ************************* -->                  
+   
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">                  
+                  <div class="call-to-action my-4">
+                          <h5 class="blue-text"> RPKI-ROV Analysis </h5>
+                     <table class="table table-sm">
+                          <tbody>
+                            <!--First TR -->
+                            <tr>
+                              <th scope="row"><B>Global Analysis</B></th>
+                              <td>Displays ROV analysis from many perspectives: Global, Per Regional Internet Registry (RIR), Per Collector 
+                              </td>
+                            </tr>
+                            <!--Second TR -->
+                            <tr>
+                              <th scope="row"><B>Valid Origination</B></th>
+                              <td>Displays ROV details of routes that are found <i>Valid</i> from many perspectives: Global, Per Regional Internet Registry (RIR), Per Collector 
+                              </td>
+                            </tr>
+                            <!--Third TR -->
+                            <tr>
+                              <th scope="row"><B>Not-Found Origination</B></th>
+                              <td>Displays ROV details of routes that are found <i>Not-Found</i> from many perspectives: Global, Per Regional Internet Registry (RIR), Per Collector 
+                              </td>
+                            </tr>
+                            
+                            <!--Fourth TR -->
+                            <tr>
+                              <th scope="row"><B>Invalid Origination</B></th>
+                              <td>Displays ROV details of routes that are found <i>Invalid</i> from many perspectives: Global, Per Regional Internet Registry (RIR), Per Collector 
+                              </td>
+                            </tr>
+                            
+                            <!--Fifth TR -->
+                            <tr>
+                              <th scope="row"><B>Coverage of Invalids</B></th>
+                              <td>Displays coverage analysis of invalid preﬁxes from many perspectives: Global, according to Path details, Per Regional Internet Registry (RIR), Per Invalid type
+                              </td>
+                            </tr>
+                            
+                            <!--Sixth TR -->
+                            <tr>
+                              <th scope="row"><B>ROV Changes</B></th>
+                              <td> Illustrates Route Origin Validation changes over a period of time
+                              </td>
+                            </tr>                            
+                          <tbody>
+                     </table>
+                   </div>  
+                   <!--/Container content-->
+                </div>
+                <!--Card content-->
+            </div>
+
+         <!-- ********************************   RPKI-ROV Analysis ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Global Analysis</strong></h4>
+                    <hr><br/>
+			RPKI Monitor 2.0 allows users to get multidimensional views of RPKI-BGP data. For this purpose we provide the end-user with a selection menu displayed below. In this menu, we have four main dimensions; Time as date and hour, Regional Internet Registry, Routeviews Collector and Address Familly. <br/><br/>
+			<img class="col-md-12" src="/images/Selection.png"><br/><br/>
+			Based on the default or the chosen dimensions, we display in the description menu shown below a bref indication of the selected ones.<br/><br/>
+
+			<img class="col-md-12" src="/images/Data.png"><br/><br/>
+			
+			For the global RPKI validation analysis we present set of analyses that focus on comparing RPKI Route Origin Attestations (ROAs) to BGP routing announcements.<br/>	
+
+			The graphs below represent snapshots of RPKI validation results for both IPV4 and IPV6 unique Prefix/Origin pairs.<br/>
+
+The Prefix/Origin pairs are extracted from BGP table dumps from more than twenty RouteViews Collectors. The table dumps are downloaded four times per day (every six hours). All unique Prefix/Origin pairs observed in a given time are validated against the global RPKI using the algorithm described in [RFC 6811].<br/>
+
+As described in RFC 6811, Prefix/Origin validation results in one of three outcomes: <i>not found</i>, <i>valid</i>, and <i>invalid</i>. The validation result <i>not found</i> is also known as <i>unknown</i> [RFC 6483]. <br/><br/>
+
+			<img class="col-md-6" src="/images/ROV4.png"><img class="col-md-6" src="/images/ROV6.png"><br/><br/>
+
+			The graphs below depict the history of daily RPKI validation results for unique Prefix/Origin pairs.<br/><br/>
+
+			<img class="col-md-6" src="/images/ROV4_Time.png"><img class="col-md-6" src="/images/ROV6_Time.png"><br/><br/>
+		
+			The graphs below represent snapshots of RPKI validation changes for both IPV4 and IPV6 unique Prefix/Origin pairs.<br/>
+  			
+ 			Prefix/Origin RPKI validation change results in one of six outcomes: 
+			<ul>
+				<li> <B><i> Not Found to Valid:</i></B> The prefix/origin pairs switch from not found (the prefix in BGP item was not covered by any prefix in ROA) to valid (there exists a ROA item such that the prefix in BGP item is covered by the prefix in ROA. Max-Length satisfied and AS Match)	</li>
+				<li> <B><i> Not Found to Invalid:</i></B>The prefix/origin pairs switch from not found (the prefix in BGP item was not covered by any prefix in ROA) to invalid (there exists a ROA item such that the prefix in BGP item is covered by the prefix in ROA. either Max-Length Exceeded, or AS Mismatch, or both) </li>
+                                <li> <B><i> Valid to Not Found:</i></B>  The prefix/origin pairs switch from valid (there was a ROA item such that the prefix in BGP item was covered by the prefix in ROA. Max-Length satisfied and AS Match) to not found (the prefix in BGP item is not covered by any prefix in ROA) </li>
+                                <li> <B><i> Valid to Invalid:</i></B> The prefix/origin pairs switch from valid (there was a ROA item such that the prefix in BGP item was covered by the prefix in ROA. Max-Length satisfied and AS Match) to invalid (there exists a ROA item such that the prefix in BGP item is covered by the prefix in ROA. either Max-Length Exceeded, or AS Mismatch, or both) </li>
+                                <li> <B><i> Invalid to Not Found:</i></B>  The prefix/origin pairs switch from invalid (there was a ROA item such that the prefix in BGP item was covered by the prefix in ROA. either Max-Length Exceeded, or AS Mismatch, or both) to not found (the prefix in BGP item is not covered by any prefix in ROA)      </li>
+                                <li> <B><i> Invalid to Valid:</i></B> The prefix/origin pairs switch from invalid (there was a ROA item such that the prefix in BGP item was covered by the prefix in ROA. either Max-Length Exceeded, or AS Mismatch, or both) to valid (there exists a ROA item such that the prefix in BGP item is covered by the prefix in ROA. Max-Length satisfied and AS Match)  </li> 
+			</ul>
+			<br/><br/>
+
+			<img class="col-md-6" src="/images/ROV4_Changes.png"><img class="col-md-6" src="/images/ROV6_Changes.png"><br/>	<br/>		
+			
+			The graphs below depict the history of daily RPKI validation changes for unique Prefix/Origin pairs.<br/><br/>
+
+			<img class="col-md-6" src="/images/ROV4_Changes_Time_All.png"><img class="col-md-6" src="/images/ROV6_Changes_Time_All.png"><br/><br/>
+
+			The graphs below depict details of RPKI validation changes history for unique Prefix/Origin pairs.<br/><br/>			
+
+			<img class="col-md-6" src="/images/ROV4_Changes_Time.png"><img class="col-md-6" src="/images/ROV6_Changes_Time.png"><br/><br/>
+
+			RPKI Monitor 2.0 allows user to get a specific set of analysis for a particular RIR. As an example the graphs below represent snapshots of RPKI validation changes for both IPV4 and IPV6 unique Prefix/Origin pairs in ARIN.<br/> <br/>
+
+			<img class="col-md-6" src="/images/ROV4_ARIN.png"><img class="col-md-6" src="/images/ROV6_ARIN.png"><br/><br/>
+
+			The graphs below depict the history of daily RPKI validation results for unique Prefix/Origin pairs in ARIN.<br/><br/>			
+
+                        <img class="col-md-6" src="/images/ROV4_Time_ARIN.png"><img class="col-md-6" src="/images/ROV6_Time_ARIN.png"><br/><br/>
+
+			RPKI Monitor 2.0 allows user to get a specific set of analysis for a particular RouteViews Collector. As an example the graphs below represent snapshots of RPKI validation changes for both IPV4 and IPV6 unique Prefix/Origin pairs in RouteViews3.<br/> <br/>
+
+			<img class="col-md-6" src="/images/ROV4_R3.png"><img class="col-md-6" src="/images/ROV6_R3.png"><br/><br/>
+
+			The graphs below depict the history of daily RPKI validation results for unique Prefix/Origin pairs in RouteViews3.<br/><br/>
+
+                        <img class="col-md-6" src="/images/ROV4_Time_R3.png"><img class="col-md-6" src="/images/ROV6_Time_R3.png"><br/><br/>
+		</div>
+	</div>
+
+	<!-- ********************************   Valid Originations ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Valid Originations</strong></h4>
+                    <hr><br/>
+			In order to get a detailed vision of Prefix/Origin pairs valid by RPKI, we provide the end-user with a set of analysis about top organizations, prefix length and path length, etc.<br/>
+		
+			The graphs below depict the 15 Organizations based on the number of BGP originated prefixes valid by RPKI for both IPV4 and IPV6. The vertical axis represents Autonomous System Number and Organization name. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+                        <img class="col-md-6" src="/images/Top_Organizations_Valid4.png"><img class="col-md-6" src="/images/Top_Organizations_Valid6.png"><br/><br/>
+
+			The graphs below show the 15 Countries based on the number of IPV4 and IPV6 BGP originated prefixes valid by RPKI. The vertical axis represents Autonomous System Number and Country name. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Top_Countries_Valid4.png"><img class="col-md-6" src="/images/Top_Countries_Valid6.png"><br/><br/>
+
+			The graphs below illustrate the Prefix Length of IPV4 and IPV6 BGP originated prefixes valid by RPKI. The vertical axis represents the prefix length. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+			<img class="col-md-6" src="/images/Prefix_Length_Valid4.png"><img class="col-md-6" src="/images/Prefix_Length_Valid6.png"><br/><br/>
+
+			The graphs below depict the Path Length of IPV4 and IPV6 BGP originated prefixes valid by RPKI. The vertical axis represents path length (Number of unique Autonomous Systems included in the path). The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Path_Length_Valid4.png"><img class="col-md-6" src="/images/Path_Length_Valid6.png"><br/><br/>
+                </div>
+        </div>
+
+	<!-- ********************************   Not-Found Originations ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Not-Found Originations</strong></h4>
+                    <hr><br/>
+			In order to get a detailed vision of Prefix/Origin pairs not found by RPKI, we provide the end-user with a set of analysis about top organizations, prefix length and path length, etc.<br/>
+
+     			The graphs below represent the snapshots of the details of <i>Not Found</i> unique Prefix/Origin pairs. The <i>Not Found</i> [RFC 6811] Prefix/Origin pairs are further classified into the following two different categories:
+			<ul>
+				<li> <B><i>Not Found:Simple </i></B> Origin AS was determinable from the BGP update used to announce the prefix, and Covering ROA Prefix was not found.</li>
+				<li> <B><i>Not Found:AS-SET</i></B> Origin AS could not be determined from the BGP update used to announce the prefix (i.e., because it contains an AS-SET), and Covering ROA Prefix was not found.</li>
+			</ul>
+
+			<img class="col-md-6" src="/images/IPV4_NF.png"><img class="col-md-6" src="/images/IPV6_NF.png"><br/><br/>
+
+			The graphs below show the history of the details of unique IPV4 and IPV6 Prefix/Origin pairs that were <i>Not Found</i>.<br/><br/>
+
+                        <img class="col-md-6" src="/images/IPV4_NF_Time.png"><img class="col-md-6" src="/images/IPV6_NF_Time.png"><br/><br/>
+
+			The graphs below illustrate the 15 Organizations based on the number of BGP originated prefixes not found by RPKI for both IPV4 and IPV6. The vertical axis represents Autonomous System Number and Organization name. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Top_Organizations_NF4.png"><img class="col-md-6" src="/images/Top_Organizations_NF6.png"><br/><br/>
+
+                        The graphs below depict the 15 Countries based on the number of IPV4 and IPV6 BGP originated prefixes not found by RPKI. The vertical axis represents Autonomous System Number and Country name. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Top_Countries_NF4.png"><img class="col-md-6" src="/images/Top_Countries_NF6.png"><br/><br/>
+
+			The graphs below represent the Prefix Length of IPV4 and IPV6 BGP originated prefixes not found by RPKI. The vertical axis represents the prefix length. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+                        <img class="col-md-6" src="/images/Prefix_Length_NF4.png"><img class="col-md-6" src="/images/Prefix_Length_NF6.png"><br/><br/>
+
+			The graphs below depict the Path Length of IPV4 and IPV6 BGP originated prefixes not found by RPKI. The vertical axis represents path length (Number of unique Autonomous Systems included in the path). The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Path_Length_NF4.png"><img class="col-md-6" src="/images/Path_Length_NF6.png"><br/><br/>
+                </div>
+        </div>
+
+	<!-- ********************************   Invalid Originations ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Invalid Originations</strong></h4>
+                    <hr><br/>
+
+			In order to get a detailed vision of Prefix/Origin pairs invalid by RPKI, we provide the end-user with a set of analysis about top organizations, prefix length and path length, etc.<br/>
+
+			The graphs below represent snapshots of the details of <i>Invalid</i> unique IPV4 and IPV6 Prefix/Origin pairs. The <i>Invalid</i> [RFC 6811] Prefix/Origin pairs are further classified into the following four different categories [RFC 6907, Section 7.1]:
+			<ul>
+				<li> <B><i>Invalid:AS </B></i> Covering ROA Prefix, maxLength Satisfied, and AS Mismatch.</li>
+				<li> <B><i>Invalid:ML </B></i> Covering ROA Prefix, maxLength Exceeded, and AS Match.</li>
+				<li> <B><i>Invalid:ML-AS </B></i> Covering ROA Prefix, maxLength Exceeded, and AS Mismatch.</li>
+				<li><B><i> Invalid:AS-SET </B></i> The origin AS could not be determined from the BGP update used to announce the prefix (i.e., because it contains an AS-SET), and a ROA covering the prefix exists.</li>
+			</ul>
+
+                        <img class="col-md-6" src="/images/IPV4_Invalid.png"><img class="col-md-6" src="/images/IPV6_Invalid.png"><br/><br/>
+
+			The graphs below depict the history of the details of IPV4 and IPV6 unique Prefix/Origin pairs that were <i>Invalid</i>.
+
+                        <img class="col-md-6" src="/images/IPV4_Invalid_Time.png"><img class="col-md-6" src="/images/IPV6_Invalid_Time.png"><br/><br/>
+
+			The graphs below show the 15 Organizations based on the number of BGP originated prefixes invalid by RPKI for both IPV4 and IPV6. The vertical axis represents Autonomous System Number and Organization name. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Top_Organizations_Invalid4.png"><img class="col-md-6" src="/images/Top_Organizations_Invalid6.png"><br/> <br/>
+
+			The graphs below represent the 15 Countries based on the number of IPV4 and IPV6 BGP originated prefixes Invalid by RPKI. The vertical axis represents Autonomous System Number and Country name. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Top_Countries_Invalid4.png"><img class="col-md-6" src="/images/Top_Countries_Invalid6.png"><br/> <br/>
+
+			The graphs below illustrate the Prefix Length of IPV4 and IPV6 BGP originated prefixes Invalid:ML by RPKI (Covering ROA Prefix, maxLength Exceeded, and AS Match). The vertical axis represents the prefix length. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Prefix_Length_IM4.png"><img class="col-md-6" src="/images/Prefix_Length_IM6.png"><br/> <br/>
+			
+			The graphs below depict the Prefix Length of IPV4 and IPV6 BGP originated prefixes Invalid:AS by RPKI (Covering ROA Prefix, maxLength Satisfied, and AS Mismatch). The vertical axis represents the prefix length. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+			<img class="col-md-6" src="/images/Prefix_Length_IS4.png"><img class="col-md-6" src="/images/Prefix_Length_IS6.png"><br/> <br/>
+
+			The graphs below show the Prefix Length of IPV4 and IPV6 BGP originated prefixes Invalid:ML-AS by RPKI (Covering ROA Prefix, maxLength Exceeded, and AS Mismatch). The vertical axis represents the prefix length. The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+			<img class="col-md-6" src="/images/Prefix_Length_ISM4.png"><img class="col-md-6" src="/images/Prefix_Length_ISM6.png"><br/> <br/>
+
+			The graphs below represent the Path Length of IPV4 and IPV6 BGP originated prefixes Invalid:ML by RPKI (Covering ROA Prefix, maxLength Exceeded, and AS Match). The vertical axis represents path length (Number of unique Autonomous Systems included in the path). The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+                        <img class="col-md-6" src="/images/Path_Length_IM4.png"><img class="col-md-6" src="/images/Path_Length_IM6.png"><br/> <br/>
+
+			The graphs below depict the Path Length of IPV4 and IPV6 BGP originated prefixes Invalid:AS by RPKI (Covering ROA Prefix, maxLength Satisfied, and AS Mismatch). The vertical axis represents path length (Number of unique Autonomous Systems included in the path). The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+			<img class="col-md-6" src="/images/Path_Length_IS4.png"><img class="col-md-6" src="/images/Path_Length_IS6.png"><br/> <br/>
+
+			The graphs below depict the Path Length of IPV4 and IPV6 BGP originated prefixes Invalid:ML-AS by RPKI (Covering ROA Prefix, maxLength Exceeded, and AS Mismatch). The vertical axis represents path length (Number of unique Autonomous Systems included in the path). The horizontal axis represents number of unique Prefix/Origin pairs.<br/>
+
+			<img class="col-md-6" src="/images/Path_Length_ISM4.png"><img class="col-md-6" src="/images/Path_Length_ISM6.png"><br/>	<br/>		
+                </div>
+        </div>
+
+	 <!-- ********************************   Coverage of Invalids  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                  <div class="call-to-action my-4">
+                     
+                     <h5 class="blue-text"> Coverage of Invalid Originations </h5>
+                     <br/> In this part, analysis of Invalid routes is provided. Coverage of Invalid routes means that there are Valid or NotFound alternate routes to be found with the same prefix (as the Invalid) or a less specific prefix encopassing the Invalid prefix.  <br/><br/>
+                     <table class="table table-sm">
+                          <tbody>
+                            <!--First TR -->
+                            <tr>
+                              <th scope="row"><B>Invalid Coverage Analysis</B></th>
+                              <td>Displays global view of invalid coverage
+                              </td>
+                            </tr>
+                            <!--Second TR -->
+                            <tr>
+                              <th scope="row"><B>Details of Coverage Analysis</B></th>
+                              <td>Displays coverage of invalid originations in term of RPKI validation types.
+                              </td>
+                            </tr>
+                            <!--Third TR -->
+                            <tr>
+                              <th scope="row"><B>Path Analysis of Covering Routes</B></th>
+                              <td>Displays coverage of invalid originations in term of path details</td>
+                            </tr>
+                            
+                            <!--Fourth TR -->
+                            <tr>
+                              <th scope="row"><B>Invalid Coverage Routes per RIR</B></th>
+                              <td>Displays coverage of invalid originations Per Regional Internet Registry (RIR)
+                              </td>
+                            </tr>
+                            <!--Fifth TR -->
+                            <tr>
+                              <th scope="row"><B>Query Invalid Prefix/Origin Pairs</B></th>
+                              <td>Query for list of invalid prefix/origin pairs (with coverage details) per RIR, Origin AS, etc.</td>
+                            </tr>
+                          <tbody>
+                     </table>
+                   </div>      
+                
+                   <!--/Container content-->
+                </div>
+                <!--Card content-->
+            </div>
+
+	<!-- ********************************   All Invalid Originations ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>All Invalid Originations</strong></h4>
+                    <hr> <br/>
+
+			The graphs below display the coverage results for invalid IPV4 and IPV6 prefixes, including the validation status of their covering prefixes. The circle in the middle lists the number of invalid prefix/origin pairs. The inner ring displays the coverage information and the outer ring displays the validation status of the covering routes. Hovering over the different segments of the rings displays the corresponding statistics in the middle circle.  <br/>
+                        <img class="col-md-6" src="/images/Coverage4.png"><img class="col-md-6" src="/images/Coverage6.png"><br/><br/><br/>
+
+			The graphs below depict the history of coverage results for Invalid IPV4 and IPV6 prefixes. By hovering over the graph the detail in term of numbers and percentages can be seen. <br/>
+                        <img class="col-md-6" src="/images/Coverage_Time4.png"><img class="col-md-6" src="/images/Coverage_Time6.png"><br/>
+                </div>
+        </div>
+
+
+        <!-- ********************************   Coverage-Validation  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Coverage-Validation</strong></h4>
+                    <hr>
+			These sunburst graphs show more details about coverage of invalid prefix/origin pairs. The first ring provides the break down of invalids according to invalid:AS, invalid:ML and invalid:AS-ML. The second ring provides coverage status of each of the invalid types of the first ring. The outer most ring provides the validation status of the covering routes. Hovering over the different segments of the rings displays the corresponding statistics in the middle circle.<br/>
+                        <img class="col-md-6" src="/images/Coverage_Validation4.png"><img class="col-md-6" src="/images/Coverage_Validation6.png"><br/>
+<br/>
+When in this section, from the menu at the top it is possible to select the type of invalid and then the details for the selected invalid type are displayed. The examples below are for the case of invalid:ML.  <br/>
+
+                        <img class="col-md-6" src="/images/Coverage_IM4.png"><img class="col-md-6" src="/images/Coverage_IM6.png"><br/>
+
+			The graphs below are similar to the history graphs shown above but specific to the selected invalid type (invalid:ML in this instance).<br/>
+                        <img class="col-md-6" src="/images/Coverage_details_Time_IM4.png"><img class="col-md-6" src="/images/Coverage_details_Time_IM6.png"><br/>
+<!--img class="col-md-6" src="/images/Coverage_Validation_Time_IM4.png"><img class="col-md-6" src="/images/Coverage_Validation_Time_IM6.png"><br/>
+
+                        <img class="col-md-6" src="/images/Coverage_IS4.png"><img class="col-md-6" src="/images/Coverage_IS6.png"><br/>
+                        <img class="col-md-6" src="/images/Coverage_details_Time_IS4.png"><img class="col-md-6" src="/images/Coverage_details_Time_IS6.png"><br/>
+                        <img class="col-md-6" src="/images/Coverage_Validation_Time_IS4.png"><img class="col-md-6" src="/images/Coverage_Validation_Time_IS6.png"><br/>
+
+                        <img class="col-md-6" src="/images/Coverage_ISM4.png"><img class="col-md-6" src="/images/Coverage_ISM6.png"><br/>
+                        <img class="col-md-6" src="/images/Coverage_details_Time_ISM4.png"><img class="col-md-6" src="/images/Coverage_details_Time_ISM6.png"><br/>
+                        <img class="col-md-6" src="/images/Coverage_Validation_Time_ISM4.png"><img class="col-md-6" src="/images/Coverage_Validation_Time_ISM6.png"><br/>
+-->
+                </div>
+        </div>
+
+
+	<!-- ********************************   Coverage Details  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Coverage Details</strong></h4>
+                    <hr><br/>
+			These sunburst graphs show path details in the coverage results of invalid prefix/origin pairs. While the first ring displays the coverage information, the remaining rings provide comparison between the different properties associated with the invalid routes and their covering routes as follow: The second ring shows path comparison of covered prefix/origin pairs. The third ring displays origin comparison of covered prefix/origin pairs with different path, and the fourth ring provides peer comparison of the third ring results. Hovering over the different segments of the rings displays the corresponding statistics in the middle circle. <br/>
+                        <img class="col-md-6" src="/images/Coverage_details4.png"><img class="col-md-6" src="/images/Coverage_details6.png"><br/><br/>
+
+			The graphs below depict the history results for path comparison between invalid routes and their covering Not-Found and Valid routes. By hovering over the graph the detail in term of numbers and percentages can be seen.<br/>
+                        <img class="col-md-6" src="/images/Path_Similarity4.png"><img class="col-md-6" src="/images/Path_Similarity6.png"><br/><br/>
+
+			Results obtained from path comparison are either invalid routes and their covering routes share the same paths or they have different paths. The following graphs, provide origin comparison for covered invalid routes with different paths.<br/>   
+                        <img class="col-md-6" src="/images/Origins_comparison4.png"><img class="col-md-6" src="/images/Origins_comparison6.png"><br/>
+                </div>
+        </div>
+        <!-- ********************************   Coverage-Region  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Coverage-Region</strong></h4>
+                    <hr><br/>
+
+			These sunburst graphs show more details about coverage of invalid prefix/origin pairs. The first ring provides the break down of invalid Prefix/origin pairs according RIR registries (ARIN, APNIC, LACNIC, RIPE and AFRINIC). The second ring provides coverage status of each of the regions of the first ring. The outer most ring provides the validation status of the covering routes. Hovering over the different segments of the rings displays the corresponding statistics in the middle circle.<br/>
+                        <img class="col-md-6" src="/images/Coverage_RIR4.png"><img class="col-md-6" src="/images/Coverage_RIR6.png"><br/><br/>
+
+			When in this section, from the menu at the top it is possible to select the RIR region of the invalid routes and then the details for the selected region are displayed. The examples below are for the case of Invalids in ARIN. <br/>
+                        <img class="col-md-6" src="/images/Coverage_ARIN4.png"><img class="col-md-6" src="/images/Coverage_ARIN6.png"><br/><br/>
+
+			The graphs below are similar to the history graphs of coverage results for Invalid IPV4 and IPV6 prefixes shown above but specific to the selected RIR region (ARIN in this instance).<br/>
+                        <img class="col-md-6" src="/images/Coverage_Time_ARIN4.png"><img class="col-md-6" src="/images/Coverage_Time_ARIN6.png"><br/><br/>
+                </div>
+        </div>
+
+
+        <!-- ********************************   Invalid Prefix/Origin  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>Invalid Prefix-Origin</strong></h4>
+                    <hr><br/>
+
+			In this part, list of invalid routes with their coverage results is provided. Data displayed in this section includes the invalid prefix, Autonomous System that originated it, its Regional Internet Registry, its RPKI validation status, number of path associated with it and coverage result (either covered or not covered).<br/><br/>
+
+			<img class="col-md-12" src="/images/Coverage_Prefix.png"><br/><br/>
+			
+			The following menu is provided at the top of the page. It allows user to filter invalid routes according to differents axes, such as RIR, RPKI validation status, the originating AS, etc.<br/><br/>
+                        <img class="col-md-12" src="/images/Coverage_Prefix_menu.png"><br/><br/>
+			
+			When in this section, from the invalid routes table shown above it is possible to click on the Yes button (in case the invalid prefix/origin pair is covered) and then the details for the selected prefix are displayed. They are divided into two parts; the first bart includes information about data used in this analysis. The second part is represented as a tree. Nodes in this tree illustrate prefixes. While links depict the coverage relationship. Node color is used to clarify the RPKI validation status of each prefix (red node for the select invalid prefix, yellow nodes for the covering Not-Found prefixes and green nodes for the covering valid prefixes).   The example below is for the invalid prefix "203.92.114.0/23".  <br/><br/>
+			<img class="col-md-12" src="/images/Coverage_One_Prefix.png"><br/><br/>
+
+			Hovering over the different nodes of the tree displays the corresponding prefix properties. It includes the origin Autonomous System, the Regional Internet Registry and the RPKI validation status. <br/><br/>
+                        <img class="col-md-12" src="/images/Coverage_One_Prefix2.png"><br/>
+                </div>
+        </div>
+
+         <!-- ********************************   ROV Changes  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                  <div class="call-to-action my-4">
+                     
+                     <h5 class="blue-text"> Route Origin Validation Changes </h5>
+                     <br/> In this section we depict the set of changes in the RPKI validation status of the unique prefix/origin pairs (for both IPV4 and IPV6). These changes are due to some modifications in the list of data objects included in the RPKI repository.  <br/><br/>
+                     <table class="table table-sm">
+                          <tbody>
+                            <!--First TR -->
+                            <tr>
+                              <th scope="row"><B>All ROV Changes</B></th>
+                              <td>Displays all the RPKI Validation changes that appeared from time1 to time2. This period of time is determined by the end-user.
+                              </td>
+                            </tr>
+                            <!--Second TR -->
+                            <tr>
+                              <th scope="row"><B>ROV Changes for a Specific Prefixes</B></th>
+                              <td>Displays all the RPKI Validation changes for one prefix.
+                              </td>
+                            </tr>
+                          <tbody>
+                     </table>
+                   </div>  
+                   <!--/Container content-->
+                </div>
+                <!--Card content-->
+         </div>
+
+
+
+
+         <!-- ********************************   All ROV Changes  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>All ROV Changes</strong></h4>
+                    <hr><br/>
+
+			The following menu allows user to get and overview of the RPKI validation changes during a specific period of time. In this menu, user can select a starting time and an ending time. As a result, all the changes that appeared on the RPKI validation status during the selected period will be displayed. <br/> <br/>
+                        <img class="col-md-12" src="/images/ROV_Changes_Time_Menu.png"><br/><br/>
+
+			The following graphs display an example of the IPV4 and IPV6 RPKI validation changes. data selected in this analysis is for the period from 2019-05-10:00 to 2019-05-15:00. <br/><br/>
+                        <img class="col-md-12" src="/images/ROV_Changes_All.png"><br/><br/><br/>
+			
+			The table below shows more details about the RPKI validation changes. It has two parts; the first part illustartes prefix data such as the origin, number of changes, etc.  The second part displays The changes in the ROA object. By clicking on a specific prefix we get all the RPKI validation changes associated with this one. On the other side, by clicking on the ROA prefix we get more information about this ROA.<br/><br/>
+                        <img class="col-md-12" src="/images/Changes_All_Prefixes4.png"><br/><br/><br/>
+
+			The following menu allows users to filter results of the RPKI validation changes according to various dimensions. This includes the Autonumus System that originates the prefix, the prefix max-length, number of changes, etc.<br/><br/>  
+			<img class="col-md-12" src="/images/ROV_Changes_Filter.png"><br/><br/>
+                </div>
+        </div>
+
+	<!-- ********************************   Specific Prefix  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>ROV Changes for a Specific Prefix</strong></h4>
+                    <hr><br/>
+			When in this section, user can select one specific prefix and then all the details of the RPKI validation changes for this selected one are displayed. The example below is for the prefix : 185.57.128.0/23.<br/><br/> 
+
+
+                        <img class="col-md-12" src="/images/One_Prefix_Changes.png"><br/><br/>
+			
+			
+
+			Clicking on the "Less specific" button in the previous chart permits the user to drill up and get all the less prefixes associated withe the selected one. The example below is for the less specific prefixes of 185.57.128.0/23.<br/><br/> 
+			<div class="row justify-content-md-center"> <img class="col-md-6" src="/images/Less_Specific.png"></div><br/><br/>
+			
+			While clicking on the "More specific" button lets the user to drill down and get all the More prefixes associated withe the selected one. The example below is for the more specific prefixes of 185.57.128.0/23. In this case there are none. <br/><br/>
+                        <div class="row justify-content-md-center"><img class="col-md-6" src="/images/More_Specific.png"></div><br/><br/>
+
+			Zooming into certain sections in the main lanes helps users improving visibility of values in the generated chart. As a result, the corresponding section is displayed in the second lanes. The example below is the zooming result of the RPKI validation changes for the prefix 185.57.128.0/23 between 2019-04-25 and 2019-04-29. <br/><br/>	
+                        <img class="col-md-12" src="/images/One_Prefix_Changes1.png"><br/><br/>
+
+			By clicking on the selected section in the second lanes a detailed view of this selected period is provided. It includes information about the RPKI validation status as well as their corresponding ROAs.<br/><br/>   	
+                        <img class="col-md-12" src="/images/One_Prefix_Changes_ROA.png"><br/><br/><br/>
+	
+			After clicking on a specific ROA prefix from the previous table and then more information for the selected ROA is displayed as follows:  <br/><br/> 
+                        <img class="col-md-12" src="/images/Roa_File.png"><br/><br/><br/>
+
+			For the case where the selected prefix is originated by different Autonomous Systems, multiple main lanes and secondary lanes are provided. Each one represents one specific prefix/origin pair. The example below is for the prefix : 103.131.192.0/24. This prefix is originated by two ASes (136503 and 138916).<br/><br/>
+			<img class="col-md-12" src="/images/One_Prefix_Changes_Multiple.png"><br/><br/>
+                </div>
+        </div>
+
+        <!-- ********************************   RPKI Data Analysis  ************************* -->
+        <div class="card card-cascade my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn">
+                    <!--Title-->
+                    <h4 class="card-title  text-center"><strong>RPKI Data Analysis</strong></h4>
+                    <hr><br/>
+		        The provided tool allows users to monitor and inspect RPKI Objects. RPKI Monitor 2.0 uses data generated by RPKI MIRO (https://github.com/rpki-miro).<br/>
+		
+			For a given RPKI object (.CER, .ROA, .MFT, .CRL), the validation can yield three different results:
+			<ul>
+				<li><B><i> Valid: </i></B>	The object conforms fully to RFC specifications.</li>
+				<li><B><i> Warning: </i></B>    There exists a path of valid certificate and this object is treated as valid. However, some inconsistencies with the specification exit. They are minor and not problenatic from a security point of viw.</li>
+				<li><B><i> Invalid: </i></B>   The object considered invalid due to  there is no path of valid certificates to the trust anchor, the signature on the object can not be verified using its supposed parent certificate, the object expired.   </li>
+			</ul>
+
+			The table below displays a snapshot of RPKI repository validation.<br/>
+                        <div class="row justify-content-md-center"><img class="col-md-10" src="/images/Repository_Table.png"></div><br/><br/>
+
+			The graph below shows the number of certificates at various levels of certificate-path depth within the RPKI hierarchy (for each RIR).
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Distribution_of_RPKI_Certificate_Path_Depths_Including_ROA_EEs.png"></div><br/><br/>
+
+			The graph below shows the number of IPv4 address blocks (regardless of block size) declared in CAs certs at various levels of certificate-path depth within the RPKI hierarchy. TA certs and EEs for the ROA are not considered for generating this graph.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Number_of_IPv4_Address_Blocks_Contained_in_CA_Certificates.png"></div><br/><br/>
+
+			The graph below shows normalized IPv4 address space in /24s declared in CAs at various levels of certificate-path depth within the RPKI hierarchy. TA certs and EEs for the ROA are not considered for generating this graph.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Normalized_IPv4_Address_Space_Contained_in_CA_Certs.png"></div><br/><br/>
+
+			The graph below shows the number of IPv6 address blocks (regardless of block size) declared in CAs certs at various levels of certificate-path depth within the RPKI hierarchy. TA certs and EEs for the ROA are not considered for generating this graph.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Number_IPv6_Address_Blocks_Contained_in_CA_Certs.png"></div><br/><br/>
+
+			Each ROA contains exactly one AS number (ASN), but each ASN can appear in multiple ROAs. A point (x,y) on the plot in the above graph conveys that there are in total <i>y</i> ASNs each of which appears in exactly <i>x</i> number of ROAs.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Number_of_ROAs_Published_per_AS.png"></div><br/><br/>
+
+			The graph below shows the number of ROAs published per Regional Internet Registry.
+			<div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Number_of_ROAs_Published_per_RIR.png"></div><br/><br/>
+
+			The graph below depicts the number of IPV4 IP prefixes listed in ROAs. All IPv4 Count includes any repeated prefixes appearing in multiple ROAs, possibly with different OAS.
+
+			<div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Number_of_total_ROA_IPV4_Prefixes.png"></div><br/><br/> 
+
+			The graph below depicts the number of IPV4 IP prefixes listed in ROAs. All IPv4 Count includes only unique prefixes.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/Number_ROA_IPV4_Prefixes.png"></div><br/><br/>
+
+			The graph below depicts the total number of IPV4 prefixes registered in all ROAs as a function of prefix length.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/IPV4_Prefix_Length_ROAs.png"></div><br/><br/>
+
+			The graph above depicts the total number of IPV6 prefixes registered in all ROAs as a function of prefix length.
+			<div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/IPV6_Prefix_Length_ROAs.png"></div><br/><br/>
+
+			The graph below depicts the total number of IPV4 prefixes registered in all ROAs as a function of prefix max length.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/IPV4_Prefix_ML_ROAs.png"></div><br/><br/>
+
+			The graph above depicts the total number of IPV6 prefixes registered in all ROAs as a function of prefix max length.
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/IPV6_Prefix_ML_ROAs.png"></div><br/><br/>
+
+			The graph below depicts the 25 Autonomous Systems that appear the most in ROAs. The vertical axis represents Autonomous System Number and Country name. The horizontal axis represents number of Prefixes.		
+                        <div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/25_AS_ROAs.png"></div><br/><br/>
+
+			The graph below depicts the 25 Autonomous Systems with the most prefixes declared in ROAs. The vertical axis represents Autonomous System Number and Country name. The horizontal axis represents number of Prefixes.
+			<div class="row justify-content-md-center"><img class="col-md-8" height="600px" src="/images/25_AS_Prefixes_ROAs.png"></div><br/><br/>
+                </div>
+        </div>
+
+
+
+
+
+
+
+
+	</div>
+      </div>
+        
+    </main>
+    <!--/Main layout-->
+	
+
+    <div style="height:500px"></div>
+
+
+    <!-- SCRIPTS -->
+    <% include ./Footer.html %>

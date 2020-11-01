@@ -1,0 +1,149 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+		document.getElementById('coverage_menu').className += " active";
+                // Get MongoDB Data
+                var version = '<%- version %>';
+		var time = '<%- time %>';
+                var data = <%- data %>;
+                var prefixData = data[0]["InvPr"+version];
+                var prefix = '<%- prefix %>';
+                var time_str = time_format(time);
+
+		/* Chart variables	*/
+                var i=0, svg, tree, tooltip_div;               
+                var rirArray = {"A":"ARIN", "R":"RIPE", "P":"APNIC", "L":"LACNIC", "F":"AFRINIC"};
+                var circleCol = {"IM":"red", "IS":"red", "ISM":"red", "NF":"yellow", "V":"green"};
+                var Validation = {"IM":"Invalid:ML", "IS":"Invalid:AS", "ISM":"invalid:AS-ML", "NF":"Not-Found", "V":"Valid"};
+
+                function generateCoverageTree(div)
+                {
+			var width = prefix_tree_width;
+			var height = prefix_tree_height;
+	                var margin = prefix_tree_margin;
+                  	tree = d3.layout.tree().size([width, height]);
+                  	svg = d3.select("#"+div)
+                          	.append("div")
+			  	.style("padding-bottom", "70%")
+                          	.classed("svg-container", true) //container class to make it responsive
+                          	.append("svg")
+                          	.attr("preserveAspectRatio", "xMinYMin meet")
+                          	.attr("viewBox", "0 0 700 700")//class to make it responsive
+                          	.classed("svg-content-responsive", true)
+                          	.append("g")
+                          	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			/*	Get Data	*/
+                  	var root = prefixData[0];
+                  	root.y0 = height / 2;
+                  	root.x0 = width / 2;
+
+                  	root.children = [];
+                  	for(var i = 0; i < root.CPr.length; i++)
+                  	{
+                    		root.CPr[i].isRight = false;
+                    		root.CPr[i].parent = root;
+                    		root.children.push(root.CPr[i]);
+                  	}
+                  	if(root.children) root.children.forEach(function(d){return null;});
+                  	root.isRight = false;
+                  	var t2 = d3.layout.tree().size([width, height]).children(function(d){return d.CPr;});
+                  	t2.nodes(root);
+                  	update(root);
+                }
+
+		function tooltip_text(data)
+		{
+			var str = "<B style='color:darkBlue;'>Prefix:</B> "+data.Pr;
+			str += "</br><B style='color:darkBlue;'>Origin:</B> "+data.O;
+			str += "</br><B style='color:darkBlue;'>Region:</B> "+rirArray[data.R];
+			str += "</br><B style='color:darkBlue;'>Validation:</B> "+Validation[data.V];
+			return str;
+		}
+
+                function update(root)
+                {
+                  	var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
+                  	// Compute the new tree layout.
+                  	var nodes = tree.nodes(root).reverse(),
+                     	links = tree.links(nodes);
+
+                    	// Normalize for fixed-depth.
+                    	nodes.forEach(function(d) { d.y = d.depth * 150; });
+                    	// Declare the nodesâ€¦
+                    	var node = svg.selectAll("g.node")
+                     		      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+                     	// Enter the nodes.
+                    	var nodeEnter = node.enter().append("g")
+                     			.attr("class", "node")
+                     			.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+                     			.on("mouseover", function(d) 
+					{
+                      				div.transition().duration(200).style("opacity", .9);
+                      				div.html(tooltip_text(d))
+                      				   .style("left", (d3.event.pageX-600) + "px")
+                      				   .style("top", (d3.event.pageY-420) + "px")
+                    			})
+                    			.on("mouseout", function(d) 
+					{
+                         			div.transition()
+                         			.duration(500)
+                         			.style("opacity", 0);
+                    			});
+                    nodeEnter.append("circle")
+                     	     .attr("r", 10)
+                             .style("fill", function(d) { return circleCol[d.V];});
+
+                    nodeEnter.append("text")
+                             .attr("x", function(d) {
+                    		return d.children || d._children ? -13 : 13; })
+                     	     .attr("dy", ".35em")
+                             .attr("text-anchor", function(d) {
+                    		return d.children || d._children ? "end" : "start"; })
+                     	     .text(function(d) { return d.Pr; })
+                             .style("fill-opacity", 1);
+
+                    // Declare the linksâ€¦
+                    var link = svg.selectAll("path.link")
+                     		  .data(links, function(d) { return d.target.id; });
+
+                    // Enter the links.
+                    link.enter().insert("path", "g")
+                        .style("fill", "none")
+                        .style("stroke", "#ccc")
+                        .style("stroke-width", "1.5px")
+                        .attr("d", diagonal);
+                }
+
+		var main_div = document.getElementById("divs_list");
+
+		var divs = coverage_div(version, "All", "All", lastUpdate, "/Cov");
+                /*  Title data of selected page     */
+                var title_param = {"title":"Coverage of invalid Prefix "+prefix, "version":"IPv"+version, "col":"All", "rir":"all", "time":time_str};
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+		main_div.innerHTML += table_div('div1');    
+                div = d3.select("#div1").append("div").attr("class", "tooltip").style("opacity", 0);
+
+                generateCoverageTree("div1");
+
+
+                $('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

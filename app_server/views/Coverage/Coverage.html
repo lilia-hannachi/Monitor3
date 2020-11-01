@@ -1,0 +1,74 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/LineData.js"></script>
+    <script src="/javascripts/LineChart.js"></script>
+    <script src="/javascripts/SunBurst.js"></script>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+		document.getElementById('coverage_menu').className += " active";
+                // Get MongoDB Data
+                var version = '<%- version %>';
+                var time = '<%- time %>';
+
+                var time_str = time_format(time);
+		var coverageData = <%- data %>; 
+		 /*  Title data of selected page     */
+                var title_param = {"title":"Invalid-Coverage Analysis", "version":"IPv"+version, "col":"All", "rir":"all", "time":time_str};
+
+		var global_title = "Coverage of Invalids: All Invalid Originations";
+
+		/*  List of functions  */
+                function timeFunction(time)
+                {
+                        time_str = time_format(time) ;
+                        document.getElementById(time_label).innerHTML = "<B>Date:</B> : "+time_str;
+                        getSunBurst(time);
+                }
+
+                function getSunBurst(time, title)
+                {
+                        var data = coverageData.filter(function(row){ return row.Time==time;});
+                        data = data[0];
+                        generateSunBurst(version, data["Cv"+version],  'div1', 'legend1', data["T_Pr"+version], title, 0.85, title_param);
+		}
+
+
+		/*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+		var divs = coverage_div(version, "All", "All", lastUpdate, "/Cov");   
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+           
+                /* Global Object to store the JSON Data of all the the div_Charts */
+                var globalData = {};
+		globalData["div2"] = getLineData(coverageData, {div_name:"div2", attr1:['Cv'+version], attr2:"", attr3:"", attr4:"", type:1, label:"Cv"});
+                
+                var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+                /** Generate D3 CHARTS */
+                div1 = {global_title:global_title, title:"Invalid IPv"+version+ " Prefixes and their Covering Prefixes", div_name:"div1", desc:"This graph quantifies Invalid prefixes that are covered by other less specific prefixes that are either Valid or Not-Found. If an Invalid prefix has coverage, then the address space in it is still routable when selection policy drops Invalid routes."};
+                div2 = {global_title:global_title, title:"Validation history of IPv"+version+ " Invalid prefixes and their Covering Prefixes", div_name:"div2", desc:""};
+                main_div.innerHTML += start_chart+chart_div_without_JSON(div1)+end_chart;
+                main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+      
+                /*  ******************* */
+                getSunBurst(time, div1.title);
+                generateLineChart(globalData["div2"], "div2","# Unique invalid Prefixes", div2.title, title_param);
+                                
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

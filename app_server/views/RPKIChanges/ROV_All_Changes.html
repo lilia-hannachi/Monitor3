@@ -1,0 +1,753 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+
+    <!--Main layout-->
+    <main>
+
+        <div class="container-fluid">
+         <article class="content cards-page">
+		<section class="section">
+                    <div class="row">
+                        <div class="col-xl-6" id="Chart4" style="display:none;">
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <div class="header-block">
+                                        <h5 class="title">  <B> RPKI Validation Changes in IPv4 Prefix/Origin Pairs </B></h5>
+                                    </div>
+                                </div>
+				                <div class="card-block">
+                                	<div id='div_Chart4'></div>
+					                <div id='Time4'></div>
+				                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6" id="Chart6" style="display:none;">
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <div class="header-block">
+                                        <h5 class="title">  <B> RPKI Validation Changes in IPv6 Prefix/Origin Pairs </B></h5>
+                                    </div>
+                                </div>
+                                <div class="card-block">
+                                    <div id='div_Chart6'></div>
+				                    <div id='Time6'></div>
+                                </div>
+                           </div>
+                        </div>
+                     </div>
+        	</section>
+		</br>
+		<section class="section"  id="filterDiv4" style="display:none;">
+                    <div class="row">
+                    	<div class="col-xl-12">
+    		        	<nav class="navbar navbar-toggleable-md navbar-expand-lg scrolling-navbar">                                           
+    			            <div class="nav navbar-nav mx-auto form-row">
+    			                <div class="form-group col-md-2">
+	                                    <label>Origin </label>
+        	                            &nbsp; &nbsp;    			                
+                	                    <select id="Origin4" class="browser-default form-control dropdown-primary" multiple style="max-width:100px"></select>
+	                                </div>&nbsp; &nbsp;
+
+					<div class="form-group col-md-2">
+                                            <label>Max Length </label>
+                                            &nbsp; &nbsp; 
+                                            <select id="ML4" class="browser-default form-control dropdown-primary" multiple style="max-width:100px"></select>
+                                        </div>&nbsp; &nbsp;
+
+					<div class="form-group col-md-2">
+                                            <label>N<span>&#176;</span> Changes </label>
+                                            &nbsp; &nbsp;
+                                            <select id="Count4" class="browser-default form-control dropdown-primary" multiple style="max-width:100px"></select>
+                                        </div>&nbsp; &nbsp;
+
+					<div class="form-group col-md-3">
+                                            <label>Validation </label>
+                                            &nbsp; &nbsp; 
+                                            <select id="ValChang4" class="browser-default form-control dropdown-primary" multiple style="max-width:200px"></select>
+                                        </div>&nbsp; &nbsp;
+	                                <div style="height:160px; position:relative;">
+        	                            <button type="submit" class="btn btn-primary btn-md submit_Search" style="margin:0;" onclick=submitFunction(4)> Filter Data</button>
+                	                </div>                                
+               	 		     </div>
+            			 </nav>
+    			    </div>
+    			</div>
+		    </section>            
+		    <br/>
+
+		    <section class="section" id="Prefixes4"  style="display:none;">
+                    	<div class="row">
+                        	<div class="col-xl-12">
+                                	<div class="card card-info table-responsive table-responsive-sm table-responsive-md" id='table4'></div>
+                            	</div>
+                        </div>
+                    </section>
+                    <br/>
+
+
+		<section class="section"  id="filterDiv6" style="display:none;">
+                    <div class="row">
+                        <div class="col-xl-12">
+                                <nav class="navbar navbar-toggleable-md navbar-expand-lg scrolling-navbar">
+                                    <div class="nav navbar-nav mx-auto form-row">
+                                        <div class="form-group col-md-2">
+                                            <label>Origin </label>
+                                            &nbsp; &nbsp;
+                                            <select id="Origin6" class="browser-default form-control dropdown-primary" multiple style="max-width:150px"></select>
+                                        </div>&nbsp; &nbsp;
+
+                                        <div class="form-group col-md-2">
+                                            <label>Max Length </label>
+                                            &nbsp; &nbsp;
+                                            <select id="ML6" class="browser-default form-control dropdown-primary" multiple style="max-width:100px"></select>
+                                        </div>&nbsp; &nbsp;
+
+                                        <div class="form-group col-md-2">
+                                            <label>N<span>&#176;</span> Changes </label>
+                                            &nbsp; &nbsp;
+                                            <select id="Count6" class="browser-default form-control dropdown-primary" multiple style="max-width:100px"></select>
+                                        </div>&nbsp; &nbsp;
+
+                                        <div class="form-group col-md-3">
+                                            <label>Validation</label>
+                                            &nbsp; &nbsp;
+                                           <select id="ValChang6" class="browser-default form-control dropdown-primary" multiple style="max-width:200px"></select>
+                                        </div>&nbsp; &nbsp;
+
+                                        <div style="height:160px; position:relative;">
+                                            <button type="submit" class="btn btn-primary btn-md submit_Search" style="margin:0;" onclick=submitFunction(6)> Filter Data</button>
+                                        </div>
+                                     </div>
+                                 </nav>
+                            </div>
+                        </div>
+                    </section>
+                    <br/>
+
+                    <section class="section" id="Prefixes6"  style="display:none;">
+                        <div class="row">
+                                <div class="col-xl-12">
+					<div id='table6' class="card card-info table-responsive table-responsive-sm table-responsive-md"></div>
+                                </div>
+                        </div>
+                    </section>
+           </article>
+           <div style="height:500px"></div>
+        </div>
+    </main>
+    <!--/Main layout-->
+
+    <script>
+	document.getElementById('changes_menu').className += " active";
+
+	function submitFunction(version)
+        {
+                var result = new Array();
+                var objVal = (version == 6 ) ? ipv6Data : ipv4Data;
+                var originList = selectionList("Origin"+version);
+                var mlList = selectionList("ML"+version);
+                var countList = selectionList("Count"+version);
+                var valChanges = selectionList("ValChang"+version);
+                if(mlList.length>0 || countList.length>0 || valChanges.length>0 || originList.length>0)
+                {
+                   for(var i=0; i<objVal.length; i++)
+                   {
+                        var select = 0;
+                        var prefix = objVal[i]._id["Pr"];
+                        var origin = objVal[i]._id["O"];
+                        var length = prefix.split("/");
+                        var docs = objVal[i].doc;
+
+                        if(originList.indexOf(origin) != -1 || mlList.indexOf(length[1]) != -1 || countList.indexOf(docs.length+"") != -1)
+                        {
+
+                                select =1
+                        }
+                        for(var j=0; j<docs.length; j++)
+                        {
+                                var val = labelArray[docs[j].D1["V"]]+" to "+labelArray[docs[j].D2["V"]];
+                                if(valChanges.indexOf(val) != -1)
+                                {
+                                        select = 1;
+                                }
+                        }
+                        if(select ==1)
+                        {
+                                result.push(objVal[i])
+                        }
+                   }
+                   if(version == 6)
+                   {
+                        ipv6Data = result;
+                        selectAfterFilter(ipv6Data, 6);
+                        generateFilter(6);
+                        generateTables(ipv6Data, 6, 1);
+                   }
+                   else
+                   {
+                        ipv4Data = result;
+                        selectAfterFilter(ipv4Data, 4);
+                        generateFilter(4);
+                        generateTables(ipv4Data, 4, 1);
+                   }
+                }
+        }
+
+	function selectionList(name)
+        {
+                var x = document.getElementById(name);
+                var optionVal = new Array();
+                for (i = 0; i < x.length; i++) {
+                        if (x.options[i].selected) {
+                                optionVal.push(x.options[i].value);
+                        }
+                }
+                return optionVal
+        }
+
+        var jsonData = <%- data %>;
+        var time1 = '<%- Time1 %>';
+        var time2 = '<%- Time2 %>';
+
+        var main_Bar = "Chart", bar_Chart = "div_Chart", main_Prefixes = "Prefixes", tab_div = "table", filter_div = "filterDiv";    
+
+        var ipv4Val = {}, ipv6Val = {}, ipv4Global = {}, ipv6Global = {}, ipv4Data=new Array(), ipv6Data=new Array(), validation={4:new Array(), 6:new Array()}, ml={4:new Array(), 6:new Array()}, origins={4:new Array(), 6:new Array()}, count={4:new Array(), 6:new Array()};
+
+
+
+        var labelArray = {"NF":"Not-Found", "V":"Valid", "IS":"Invalid:AS", "IM":"Invalid:ML", "ISM":"Invalid:AS-ML", "NFS":"Not-Found:AS-Set", "ISS":"Invalid:AS-Set"};
+        var labelGlobal = {"NF":"Not-Found", "V":"Valid", "IS":"Invalid", "IM":"Invalid", "ISM":"Invalid", "NFS":"Not-Found", "ISS":"Invalid"};
+        /*      Get the different types of data */
+        generateData(jsonData);
+
+        /*      Generate Bar Charts     */
+        generateBarChart(ipv4Global, 4) ;
+        generateBarChart(ipv6Global, 6) ;
+        var perPage = 30;
+        /* Generate Tables      */
+        generateTables(ipv4Data, 4, 1);
+        generateTables(ipv6Data, 6, 1);
+
+        function selectAfterFilter(data, version)
+        {
+           validation[version]= new Array(), ml[version]=new Array(), origins[version]=new Array(), count[version]=new Array();
+           for(var i=0; i< data.length; i++)
+           {
+                var prefix = data[i]._id["Pr"];
+                var origin = data[i]._id["O"];
+                var length = prefix.split("/");
+                var docs = data[i].doc;
+                arrayData(origins[version], origin);
+                arrayData(count[version], docs.length);
+                arrayData(ml[version], length[1]);
+                for(var j=0; j<docs.length; j++)
+                {
+                        var val = labelArray[docs[j].D1["V"]]+" to "+labelArray[docs[j].D2["V"]];
+                        arrayData(validation[version], val);
+                }
+           }
+        }
+
+
+	function initTable(ver)
+        {
+                return "<table class='table'><thead class='thead-dark text-center'><tr><B><th rowspan=2>ORIGIN</th> <th rowspan=2>IPV"+ver+" PREFIX</th> <th rowspan=2> COUNT</th>  <th rowspan=2>TIME</th> <th rowspan=2>VALIDATION</th> <th colspan=3>ROAs ("+time_format(time1)+")</th><th colspan=3>ROAs ("+time_format(time2)+")</th></B></tr><tr><B><th>Prefix1</th><th>Origin1</th><th>ML1</th><th>Prefix2</th><th>Origin2</th><th>ML2</th></B></tr></thread>";
+        }
+
+        function barChartData(objVal, val)
+        {
+                if(objVal[val] == undefined)
+                        objVal[val] = 1;
+                else
+                        objVal[val] += 1;
+        }
+
+        function arrayData(arr, val)
+        {
+                if(arr.indexOf(val) == -1)
+                {
+                        arr.push(val);
+                }
+        }
+
+        function generateFilter(version)
+        {
+                if(origins[version].length > 0)
+                {
+                        setSelectData("ValChang"+version, validation[version]);
+                        setSelectData("Origin"+version, origins[version]);
+                        setSelectData("ML"+version, ml[version]);
+                        setSelectData("Count"+version, count[version]);
+                }
+        }
+
+        function setSelectData(htmlElement, arrVal)
+        {
+                var inputVal1 = '';
+                for(var i=0; i<arrVal.length; i++)
+                {
+                        inputVal1 += '<option value="'+arrVal[i]+'">'+arrVal[i]+'</option>';
+                }
+                document.getElementById(htmlElement).innerHTML = inputVal1;
+        }
+
+	function generateData(data)
+        {
+           for(var i=0; i< data.length; i++)
+           {
+                var prefixOrigin = data[i]._id["Pr"].split("_");
+                var origin = prefixOrigin[1];
+                var prefix = prefixOrigin[0];
+                var length = prefix.split("/");
+                var docs = data[i].doc;
+                var isIPV6 = (prefix.includes(":")) ? 1 : 0;
+                var index = 4;
+                data[i]._id["Pr"] = prefix;
+                data[i]._id["O"] = origin;
+                if(isIPV6 == 1)
+                {
+                        ipv6Data.push(data[i]);
+                        index = 6;
+                }
+                else
+                {
+                        ipv4Data.push(data[i]);
+                }
+                arrayData(origins[index], origin);
+                arrayData(count[index], docs.length);
+                arrayData(ml[index], length[1]);
+                for(var j=0; j<docs.length; j++)
+                {
+                        var val = labelArray[docs[j].D1["V"]]+" to "+labelArray[docs[j].D2["V"]];
+			var valGlobal = labelGlobal[docs[j].D1["V"]]+" to "+labelGlobal[docs[j].D2["V"]];
+                        arrayData(validation[index], val);
+                        if(isIPV6 == 1) 
+			{
+				barChartData(ipv6Val, val);
+				barChartData(ipv6Global, valGlobal);
+			}
+			else
+			{
+				barChartData(ipv4Val, val);
+				barChartData(ipv4Global, valGlobal);
+			}
+                }
+           }
+           generateFilter(4);
+           generateFilter(6);
+        }
+
+        function generateTables(data, ver, current)
+        {
+            if(Object.keys(data).length>0)
+            {
+                document.getElementById(main_Prefixes+ver).style.display = "block";
+                document.getElementById(filter_div+ver).style.display = "block";
+                generateTable(data, ver, current);
+            }
+        }
+
+        function sortByOrigin(a, b)
+        {
+                return a._id["O"] - b._id["O"];
+        }
+        
+      	 function getRow(arrVal)
+      	{
+      		var tdO = getColor(arrVal[0], arrVal[1]);
+      		var tdL = lengthColor(arrVal[2], arrVal[3]);
+      		var tdP = prefixColor(arrVal[4], arrVal[5], arrVal[6]);
+      		var result = tdP+tdO+tdL;
+      		return result;
+      	}
+
+	      function generateTable(data, ver, current)
+        {
+           data = data.sort(sortByOrigin);
+           var table = initTable(ver);
+
+           var init = (perPage * current) - perPage;
+           var end = init + perPage;
+           var maxVal = (data.length > end) ? end : data.length;
+           for(var i=init; i< maxVal; i++)
+           {
+                var origin = data[i]._id["O"];
+                var prefix = data[i]._id["Pr"];
+                var length = prefix.split("/");
+                var docs = data[i].doc;
+                var lines = 0;
+                var tds = "";
+
+                for(var j=0; j<docs.length; j++)
+                {
+                        var td = "";
+                        var val = labelArray[docs[j].D1["V"]]+" to "+labelArray[docs[j].D2["V"]];
+                        var time1 = docs[j].T1;
+                        var time2 = docs[j].T2;
+                        var roas1 = docs[j].D1["R"];
+                        var roas2 = docs[j].D2["R"];
+                        var rows = 0;
+                        for(var k=0; k < roas1.length; k++)
+                        {
+                                var key1 = roas1[k];
+                                var ro2Obj = checkExist(key1.Pr, roas2);
+                                rows += 1;
+				                        td += getRow([origin, key1.O, length[1], key1.ML, key1.Pr, key1.F, time1]);
+                        				td += getRow([origin, ro2Obj[0].O, length[1], ro2Obj[0].ML, ro2Obj[0].Pr, ro2Obj[0].F, time2])+"</tr>";
+                        				if(ro2Obj.length >1)
+                        				{
+                        					for(var l=1; l<ro2Obj.length; l++)
+                        					{
+                        						rows += 1;
+                        						td += getRow([origin, "", length[1], "", ""]);
+                                                        		td += getRow([origin, ro2Obj[l].O, length[1], ro2Obj[l].ML, ro2Obj[l].Pr, ro2Obj[l].F, time2])+"</tr>";
+                        					}
+                        				}		
+                         }
+
+                         for(var l=0; l<roas2.length; l++)
+                         {
+                                 var key2 = roas2[l];
+                                 var exist = checkExist2(key2.Pr, roas1);
+                                 if(exist == 0)
+                                 {
+                                         rows += 1;
+                                         td += getRow([origin, "-", length[1], "-", "-"]);
+                                         td += getRow([origin, key2.O, length[1], key2.ML, key2.Pr, key2.F, time2])+"</tr>";
+                                  }
+                         }
+                        lines += rows;
+                        var multiVal = (j != 0) ? "<tr>" : "";
+                        td = multiVal+"<td rowspan="+rows+">["+formatTime(time1)+", "+formatTime(time2)+"]</td><td rowspan="+rows+">"+val+"</td>"+td;
+                        tds += td;
+                }
+                tds = "<tr><td rowspan="+lines+">"+(origin=="00" ? "" : origin) +"</td><td rowspan="+lines+"><a href='/PrefixOVal/"+prefix.replace("/", "|")+"'>"+prefix+"</a></td> <td rowspan="+lines+">"+docs.length+"</td>"+tds;
+                table +=tds;
+           }
+           table += "</table>";
+           d3.select("#"+tab_div+ver).html(table + generateCounter(data.length, ver, current));
+        }
+
+        function generateCounter(total, ver, current)
+        {
+                var pages = Math.ceil(total / perPage);
+                var counter = '';
+                if (pages > 0)
+                {
+                        counter =' <ul class="pagination">';
+                        if (current == 1) {
+                                counter +='<li class="page-item disabled"><a class="page-link">First</a></li>';
+                        }
+                        else
+                        {
+                                counter +='<li class="page-item" onclick="nextPage('+ver+', 1)"><a class="page-link"> First </a></li>';
+                        }
+                        var i = (current > 5 ? current - 4 : 1)
+                        if (i !== 1)
+                        {
+                                counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                        }
+
+                        for (; i <= (current + 4) && i <= pages; i++)
+                        {
+                                if (i == current)
+                                {
+                                        counter +='<li class="page-item active"><a class="page-link">'+i+'</a></li>';
+                                }
+                                else
+                                {
+                                        counter +='<li class="page-item"><a class="page-link" onclick="nextPage('+ver+','+i+')">'+i+'</a></li>';
+                                }
+                                if (i == current + 4 && i < pages)
+                                {
+                                        counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                }
+                        }
+                        if (current == pages)
+                        {
+                                counter +='<li class="page-item disabled"><a class="page-link">Last</a></li>';
+                        }
+                        else
+                        {
+                                counter +='<li class="page-item"><a class="page-link" onclick="nextPage('+ver+','+pages+')">Last</li>';
+                        }
+                        counter +='</ul>';
+                }
+		return counter;
+        }
+
+
+        function nextPage(ver, current)
+        {
+                (ver ==4) ? generateTables(ipv4Data, ver, current) : generateTables(ipv6Data, ver, current);
+        }
+
+        function formatTime(timeVal)
+        {
+                return timeVal.substring(0, 4)+"-"+timeVal.substring(4, 6)+"-"+timeVal.substring(6, 8)+":"+timeVal.substring(9, 11);
+        }
+
+        function checkExist(pr, roa)
+        {
+                var result = []; 
+                for(var k=0; k<roa.length; k++)
+                {
+                        if(roa[k].Pr == pr)
+                        {
+                                result.push(roa[k]) ;
+                        }
+                }
+		            if(result.length == 0)
+		            {
+                	result.push({"Pr":"-", "O":"-", "ML":"-"});
+		            }
+                return result;
+        }
+
+        function checkExist2(pr, roa)
+        {
+                for(var k=0; k<roa.length; k++)
+                {
+                        if(roa[k].Pr == pr)
+                        {
+                                return 1;
+                        }
+                }
+                return 0;
+        }
+
+        function getButton(class_name, val)
+        {
+            return "<button style='padding:0.5rem' type='button' class='btn btn-rounded btn-sm "+class_name+"'>"+val+"</button>";
+        }
+
+        function prefixColor(str, roaFile, timeVal)
+        {
+                        /****   str == - ***/
+                        var td = "<td>";
+                        if(str == "-" || str == "")
+                        {
+                                td = "<td>"+str+"</td>";
+                        }
+                        else
+                        {
+				td = "<td ><a href='/ROAs/"+timeVal+"/"+roaFile+"'>"+getButton("btn-success", str)+"</a></td>";
+                        }
+                        return td;
+        }
+        function lengthColor(str1, str2)
+        {
+                        var td = "<td>";
+                        if(str2 == "-" || str2 == "")
+                        {
+                                        td = "<td>"+str2+"</td>";
+                        }
+                        else
+                        {
+                                if(parseInt(str1) > parseInt(str2))
+                                {
+                                        td = "<td>"+getButton("btn-danger", str2)+"</td>";
+                                }
+                                else
+                                {
+                                        td = "<td>"+getButton("btn-success", str2)+"</td>";
+                                }
+                        }
+                        return td;
+        }
+
+        function getColor(str1, str2)
+        {
+                        var td = "<td>";
+                        if(str2 == "-" || str2 == "")
+                        {
+                                        td = "<td>"+str2+"</td>";
+                        }
+                        else
+                        {
+                                if(str1 == str2)
+                                {
+                                        td = "<td>"+getButton("btn-success", str2)+"</td>";
+                                }
+                                else
+                                {
+                                        td = "<td>"+getButton("btn-danger", str2)+"</td>";
+                                }
+                        }
+                        return td;
+        }
+
+        function getTime(time)
+        {
+                return time.substring(0,4)+"-"+time.substring(4,6)+"-"+time.substring(6,8)+" "+time.substring(9,11)+":00";
+        }
+ 
+	function globalView(version)
+	{
+     var str = "";
+     if(document.getElementById("link"+version).innerHTML  == "Summerized RPKI Changes")
+     {
+         str = "Detailed RPKI Changes";
+         (version==4) ? generateBarChart(ipv4Global, 4) : generateBarChart(ipv6Global, 6);
+     }
+     else
+     {
+         str  = "Summerized RPKI Changes";
+         (version==4) ? generateBarChart(ipv4Val, 4) : generateBarChart(ipv6Val, 6);
+     }
+     document.getElementById("link"+version).innerHTML = str;
+	}
+	
+	function chart_Footer(time1, time2, version)
+	{
+		var str  = "<br/><br/><div class ='row'>";
+                str += "<div class='col-md-1'></div>";
+		str += "<div class='col-md-4'><a id='link"+version+"' href='#' onclick='globalView("+version+");return false;'>Detailed RPKI Changes</a></div>";
+		str += "<div class='col-md-6'><h6><B>["+getTime(time1)+", "+getTime(time2)+"]</B></h6></div>";
+		str += "</div>"
+		document.getElementById("Time"+version).innerHTML  = str;
+	}
+
+        function generateBarChart(data, ver)
+        {
+                if(Object.keys(data).length > 0)
+                {
+                        document.getElementById(main_Bar+ver).style.display = "block";
+			chart_Footer(time1, time2, 4);
+			chart_Footer(time1, time2, 6);
+                        generateBarChart2(data, bar_Chart+ver);
+                }
+        }
+        function generateBarChart2(data, divName)
+        {
+                var width=500, height=450;
+                var c20 = d3.scale.category20();
+                var margin = {top: 30, right: 50, bottom: 5, left: 140};
+                var width = width - margin.left - margin.right,
+                height = height - margin.top - margin.bottom;
+
+                d3.select("#"+divName).select('div').remove();
+                var svg = d3.select("#"+divName)
+                        .append("div")
+                        .classed("svg-container", true)
+                        .append("svg")
+                        .attr("preserveAspectRatio", "xMinYMin meet")
+                        .attr("viewBox", "0 0 500 500")
+                        .classed("svg-content-responsive", true)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                var y_orig;
+                data  = getGlobalData(data);
+                data = data.sort(function (a, b) {
+                        return d3.ascending(a.count, b.count);
+                })
+
+                var x = d3.scale.linear()
+                                .range([0, width])
+                                .domain([0, d3.max(data, function (d) {
+                                        return d.count;
+                                })]);
+
+                var y = d3.scale.ordinal()
+                        .rangeRoundBands([height, 0], .1)
+                        .domain(data.map(function (d) {
+                                return d.name;
+                        }));
+
+                var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("top")
+                .tickFormat(d3.format(".2s"));
+
+                //make y axis to show bar names
+                var yAxis = d3.svg.axis()
+               .scale(y)
+                //no tick marks
+                .tickSize(0)
+                .orient("left");
+
+                var gy = svg.append("g")
+                .attr("class", "axis")
+                .call(yAxis);
+
+                var gx = svg.append("g")
+                .attr("class", "axis")
+                .call(xAxis);
+
+                var bars = svg.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("g")
+
+                bars.append("rect")
+                .attr("class", "bar")
+                .attr("y", function (d) {
+                        return y(d.name);
+                })
+                .attr("height", y.rangeBand())
+                .attr("x", 0)
+                .attr("width", function (d) {
+                        return x(d.count);
+                })
+                .style("fill", "#66b3cc");
+
+                bars.selectAll("rect")
+                .on("mouseover", function(d){
+                        var delta = d.count;
+                        var xPos = parseFloat(d3.select(this).attr("x"));
+                        var yPos = parseFloat(d3.select(this).attr("y"));
+                        var height = parseFloat(d3.select(this).attr("height"))
+                        d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+
+                        svg.append("text")
+                        .attr("x",xPos)
+                        .attr("y",yPos +height/2)
+                        .attr("class","tooltip1")
+                        .text(function(){
+                                var str;
+                                str = d.name +": "+ delta ;
+                                return str;
+                        });
+                })
+                .on("mouseout",function(){
+                        svg.select(".tooltip1").remove();
+                        d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+                });
+
+                /* add a count label to the right of each bar*/
+                bars.append("text")
+                .attr("class", "label")
+                /* y position of the label is halfway down the bar */
+                .attr("y", function (d) {
+                        return y(d.name) + y.rangeBand() / 2 + 4;
+                })
+                /* x position is 3 pixels to the right of the bar*/
+                .attr("x", function (d) {
+                        return x(d.count) + 3;
+                })
+                .text(function (d) {
+                        return d.count;
+                });
+        }
+
+        function getGlobalData(data)
+        {
+                var arrObj = [];
+                for(var key in data)
+                {
+                        var obj = {};
+                        obj['name'] = key;
+                        obj['count'] = data[key];
+                        arrObj.push(obj);
+                }
+                return arrObj;
+        }
+
+       </script>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+
+

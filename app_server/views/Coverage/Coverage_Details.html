@@ -1,0 +1,77 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/SunBurst.js"></script>
+    <script src="/javascripts/LineData.js"></script>
+    <script src="/javascripts/LineChart.js"></script>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+		document.getElementById('coverage_menu').className += " active";
+		// Get MongoDB Data
+                var version = '<%- version %>';
+                var time = '<%- time %>';
+
+                var time_str = time_format(time);
+                var coverageData = <%- data %>;
+
+		 var global_title = "Coverage of Invalids: Coverage details";
+		/*  Title data of selected page     */
+                var title_param = {"title":"Invalid-Coverage Details", "version":"IPv"+version, "col":"All", "rir":"all", "time":time_str};
+
+                /*  List of functions  */
+                function timeFunction(time)
+                {
+                        time_str = time_format(time) ;
+                        document.getElementById(time_label).innerHTML = "<B>Date:</B> : "+time_str;
+                        getSunBurst(time);
+                }
+
+                function getSunBurst(time, title)
+                {
+                        var data = coverageData.filter(function(row){ return row.Time==time;});
+                        data = data[0];
+                        generateSunBurst(version, data["T_Path"+version],  'div1', 'legend1', data["T_Pr"+version], title, 0.94, title_param);
+                }
+
+		/*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                var divs = coverage_div(version, "All", "All", lastUpdate, "/CovD");
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+                /* Global Object to store the JSON Data of all the the div_Charts */
+                var globalData = {};
+		globalData["div2"] = getLineData(coverageData, {div_name:"div2", attr1:['D'], attr2:"T_Path"+version, attr3:"Covered", attr4:"", type:1, label:"Cv"}, title_param);
+                globalData["div3"] = getLineData(coverageData, {div_name:"div3", attr1:['D'], attr2:"T_Path"+version, attr3:"Covered", attr4:"Different-Path", type:1, label:"Cv"}, title_param);
+
+		/** Generate D3 CHARTS */
+                var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+
+                div1 = {global_title:global_title, title:"The Coverage details of IPv"+version+" Invalid prefixes", div_name:"div1", desc:""};
+                 main_div.innerHTML += start_chart+chart_div_without_JSON(div1)+end_chart;
+                /** Generate D3 Line CHARTS */
+                div2 = {global_title:global_title, title:"Path Similarity between IPv"+version+" Invalids and their covering prefixes", div_name:"div2", desc:""};
+                div3 = {global_title:global_title, title:"Origins comparison in Coverage Results of IPv"+version+" Prefix Origin Pairs", div_name:"div3", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div3)+end_chart;        
+
+               getSunBurst(time, div1.title);
+               generateLineChart(globalData["div2"], "div2","# Unique Paths", div2.title, title_param);
+               generateLineChart(globalData["div3"], "div3","# Unique Paths", div3.title, title_param);
+		
+	       $('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

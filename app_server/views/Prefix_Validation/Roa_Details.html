@@ -1,0 +1,105 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+
+    <!--Main layout-->
+    <main>
+
+        <div class="container-fluid">
+         <article class="content cards-page">
+		<section class="section">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-10">
+                                <div id='Hierarchy'></div>
+                            </div>
+                        </div>
+                </section>
+		<br/>
+		<section class="section">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-10">
+                                        <div id='details'></div>
+                            </div>
+                        </div>
+                </section>
+                <br/>
+           </article>
+		<div style="height:500px"></div>
+        </div>
+    </main>
+    <!--/Main layout-->
+
+    <script>
+	var time = '<%- Time %>';
+        var data = <%- data %>;
+
+        var arr = data[0].UP;
+        arr[arr.length] = data[0].F;
+        var tree = getHierarchy();
+
+        var str = "";
+        getList(arr, 0, 0);
+        document.getElementById("Hierarchy").innerHTML += str;
+
+        function getList(arr, i, roa)
+        {
+	        str += '<nav class="navbar"><ul class="nav">';
+                if(roa == 1)
+                {
+        	        str += '&nbsp;&nbsp;&nbsp;&nbsp;<li class="nav-item"><a class="nav-link none_decoration" href="#"><i class="fa fa-angle-double-right"></i><span class="clearfix d-none d-sm-inline-block">'+arr[i]+'</span></a>';
+                }
+                else
+                {
+                        str += '&nbsp;&nbsp;&nbsp;&nbsp;<li class="nav-item"><a class="nav-link none_decoration" href="/Certs/'+time+'/'+arr[i].F+'/'+tree+'"><i class="fa fa-angle-double-right"></i><span class="clearfix d-none d-sm-inline-block">'+arr[i].F+'</span></a>';
+                }
+                i++;
+                if(i < arr.length)
+                {
+                        if(i == arr.length-1)
+                        {
+                	        getList(arr, i, 1);
+                        }
+                        else
+                        {
+                                getList(arr, i, 0);
+                        }
+                }
+                str += '</li></ul></nav>';
+         }
+         getDetails();
+         function getDetails()
+         {
+	         var tab1 = '<table class="table" style="background:white"><thead class="thead-dark"><tr><th><B>FileName</B></th><td>'+data[0].F+'</td></tr>';
+                 tab1 += '<tr><th><B>ASN</B></th><td>'+data[0].AS+'</td></tr>';
+                 tab1 += '<tr><th><B>Validity Period</B></th><td>'+data[0].V+'</td></tr>';
+                 tab1 += '<tr><th><B>Signing Time</B></th><td>'+data[0].ST+'</td></tr>';
+                 tab1 += '</thead></table>';
+                  document.getElementById("details").innerHTML += tab1+"</br></br>";
+                  var tab2 = '<div class="row justify-content-center"><div class="col-xl-10"><table class="table" style="background:white"><thead class="thead-dark"><tr><th><B>Prefix</B></th><th><B>Max length</B></th></tr></thead><tbody>';
+                  for(var i=0; i<data[0].Ps.length; i++)
+                  {
+	                  tab2 += '<tr><td>'+data[0].Ps[i].P+'</td><td>'+data[0].Ps[i].ML+'</td></tr>';
+                  }
+                  tab2 += '</tbody></table></div></div>';
+                  document.getElementById("details").innerHTML += tab2;
+          }
+
+          function getHierarchy()
+          {
+                   var tree = "";
+                   for(var i=0; i<arr.length-1; i++)
+                   {
+  	                 tree += arr[i].F+"%20";
+                   }
+                   tree += arr[arr.length-1];
+                   return tree;
+          }
+
+
+
+    </script>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

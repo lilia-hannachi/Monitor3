@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html class="nist-footer-bottom">
+
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>BGP-RPKI Deployment Monitor</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Material Design Bootstrap -->
+    <link href="/stylesheets/mdb.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css">
+      <script src="https://pages.nist.gov/nist-header-footer/js/jquery-1.9.0.min.js" type="text/javascript" defer="defer"></script>
+
+</head>
+
+<body class="fixed-sn black-skin">
+      
+    <header>
+        <nav id="nist_header" class="fixed-top double-nav"></nav>
+        <% include header.html %>
+        <% include sidebar.html %>
+    </header>
+
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+
+            <!--Card-->
+            <div class="card card-cascade wider reverse my-4 pb-5">
+
+                <!--Card content-->
+                <div class="card-body card-body-cascade wow fadeIn" data-wow-delay="0.2s">
+                    <!--Title-->
+                    <h1 class="card-title  text-center"><strong>Oops!</strong></h1>
+                    <h2 class="blue-text  text-center"><strong>ERROR PAGE</strong></h2>
+		</div>
+            </div>
+            <!--/.Card-->
+        
+        </div>
+        
+    </main>
+    <!--/Main layout-->
+
+
+    <div style="height:500px"></div>
+
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="/javascripts/jquery-3.3.1.min.js"></script>
+    <!-- Tooltips -->
+    <script type="text/javascript" src="/javascripts/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="/javascripts/mdb.min.js"></script>
+    <script>
+        // SideNav Initialization
+        $(".button-collapse").sideNav();
+        
+        new WOW().init();
+
+        $(document).ready(function(){
+
+  $("#nist_header").prepend('<div id="nistheadergoeshere"></div>');
+  $("#nistheadergoeshere").load("https://pages.nist.gov/nist-header-footer/boilerplate-header.html");
+    
+  $("body").append('<div id="nistfootergoeshere"></div>');
+  $("#nistfootergoeshere").load("https://pages.nist.gov/nist-header-footer/boilerplate-footer.html");
+
+});
+    
+    </script>
+
+</body>
+
+</html>

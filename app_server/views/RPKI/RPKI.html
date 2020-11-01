@@ -1,0 +1,224 @@
+  <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/LineData.js"></script>
+    <script src="/javascripts/LineChart.js"></script>
+    <script src="/javascripts/Donut.js"></script>
+    <script src="/javascripts/DonutData.js"></script>
+    <script src="/javascripts/BarData.js"></script>
+    <script src="/javascripts/BarChart.js"></script>
+    <script src="/javascripts/Bubbles.js"></script>
+
+    <!--Main layout-->
+    <main>
+
+    <div class="container-fluid">
+          <article class="content cards-page" id="divs_list">
+              <script>
+
+		// Get MongoDB Data
+                var version = '<%- version %>';
+		var time = '<%- time %>';
+		var previous_time, title_param2;
+                var time_str = time_format(time);
+                var rovData = <%- data %>;
+                var rovNorm = [];
+
+		var global_title = "RPKI-ROV Analysis: Global Analysis";
+		function clean_rov_data(rovData)
+		{
+			var result = [];
+			for(var obj in rovData)
+			{
+				if(rovData[obj]["POV"+version] != undefined)
+				{
+					result.push(rovData[obj]);
+				}
+        if(rovData[obj]["POVN"+version] != undefined)
+				{
+					rovNorm.push(rovData[obj]);
+				}
+			}    
+			return result;
+		}
+
+		function get_div4()
+		{
+			return {global_title:global_title, title:"RPKI-ROV Validation Changes (IPv"+version+")", div_name:"div4", desc:"Graph represents validation changes in prefix-origin pairs as compared to the previous Validation results"};
+		}
+
+		function get_title_param()
+		{
+			return {title:" RPKI-ROV Analysis", version:"IPv"+version, col:"All", rir:"All", time:time_str};
+		}
+
+		rovData = clean_rov_data(rovData);
+		
+                var rovChangesData = <%- data2 %>;
+
+		var title_param = get_title_param();
+
+		div1 = {global_title:global_title, title:"RPKI-ROV Validation of Unique Prefix-Origin Pairs (IPv"+version+")", div_name:"div1", desc:"The graph above represents the snapshot of validation results for unique Prefix-Origin pairs. The Prefix-Origin pairs are extracted from BGP table dumps from all the RouteViews Collectors."};
+   
+   divNorm1 = {global_title:global_title, title:"RPKI-ROV of Address Space (/24s) in Unique P-O Pairs", div_name:"divNorm1", desc:"Graph shows validation results of unique IPv4 Prefix-Origin pairs in terms of address space in /24 equivalents (instead of the number of pairs as shown further above)"};
+   
+                div2 = {global_title:global_title, title:"RPKI-ROV Validation history of Unique Prefix-Origin Pairs (IPv"+version+")", div_name:"div2", desc:"The graph depicts the history of RPKI validation results for unique Prefix-Origin pairs plotted at six-hours intervals."};
+
+		div3 = {global_title:global_title, title:"RPKI-ROV Validation Changes of Unique Prefix-Origin Pairs (IPv"+version+")", div_name:"div3", desc:"Graph shows # changes (every six hours) in validation of unique Prefix-Origin pairs."};
+                div4 = get_div4();
+
+		div_Valid = {global_title:global_title, title:"RPKI-ROV Validation Changes to Valid Prefix-Origin Pairs (IPv"+version+")", div_name:"div_Valid", desc:"The graph above represents the validation changes of unique Prefix-Origin pairs where the ending state is Valid."};
+		div_NF = {global_title:global_title, title:"RPKI-ROV Validation Changes to Not-Found Prefix-Origin Pairs (IPv"+version+")", div_name:"div_NF", desc:"The graph above represents the validation changes of unique Prefix-Origin pairs where the ending state is Not-Found."};
+		div_Invalid = {global_title:global_title, title:"RPKI-ROV Validation Changes to Invalid Prefix-Origin Pairs (IPv"+version+")", div_name:"div_Invalid", desc:"The graph above represents the validation changes of unique Prefix-Origin pairs where the ending state is Invalid."};
+
+		div25 = {global_title:global_title, title:"25 Autonomous Systems with the most Prefixes VALID by RPKI", div_name:"div25", desc:"The graph depicts the top 25 autonomous systems - Organizations based on the number of BGP originated prefixes valid by RPKI."};
+		div25AddSpace = {global_title:global_title, title:"25 ASN-Organizations with the most Address Space (/24s) VALID by RPKI", div_name:"div25AddSpace", desc:"The graph depicts the top 25 autonomous systems - Organizations by the size of address space (/24 equivalents) of BGP origination valid by RPKI."};
+
+
+		function validation_changes(tmp_data, param1, param2)
+		{
+			result = {};
+			result["data"] = tmp_data["data"].filter(function(row) {if(row["name"] == param1 || row["name"] == param2) return row;});
+			result["date"] = tmp_data["date"];
+			return result;
+		}
+
+		/* List of Functions  */
+		function generate_Line_Data()
+                {
+		    globalData["div2"] = getLineData(rovData, {div_name:"div2", attr1:['C'], attr2:"POV"+version, attr3:"", attr4:"", type:0, label:"V"});
+		    globalData["div3"] = getBubble_Total(rovChangesData, "C", "V"+version);
+//		    globalData["div3"] = getLineData(rovChangesData, {div_name:"div3", attr1:['IPV'+version], attr2:"", attr3:"", attr4:"", type:0, label:"P"});
+		    tmp_data = getBubble_Data(rovChangesData, "C", "V"+version);
+		    valid_data = validation_changes2(tmp_data, "NF|V", "I|V");	
+		    nf_data = validation_changes2(tmp_data, "V|NF", "I|NF");	
+		    invalid_data = validation_changes2(tmp_data, "NF|I", "V|I");	
+//		    tmp_data = getLineData(rovChangesData, {div_name:"div5", attr1:['C'], attr2:"V"+version, attr3:"", attr4:"", type:0, label:"V"});
+//		    valid_data = validation_changes(tmp_data, "Not-Found|Valid", "Invalid|Valid");
+//		    nf_data = validation_changes(tmp_data, "Valid|Not-Found", "Invalid|Not-Found");
+//		    invalid_data = validation_changes(tmp_data, "Not-Found|Invalid", "Valid|Invalid");
+                }
+
+		function check_previous_time(previous_time)
+		{
+		    div4 = get_div4();	
+		    if(previous_time != undefined)
+                    {
+                        previous_time = time_format(previous_time);
+                        title_param2.time = previous_time +" to "+ title_param2.time;
+                        div4.desc += " between "+ previous_time +" and "+ time_str;
+                    }
+		}
+
+                function generate_Donut_Data(time)
+                {
+                    var data = rovData.filter(function(row){ return row.Time==time;});
+                    data = data[0];
+                    globalData["div1"] = getDonutData(data, "POV"+version, "", "", version);
+                    /*  if we have data for /24s Prefixes */
+                    if(rovNorm.length > 0)
+                    {
+                      var dataNorm = rovNorm.filter(function(row){ return row.Time==time;});
+                      dataNorm = dataNorm[0];
+                      globalData["divNorm1"] = getDonutData(dataNorm, "POVN"+version, "", "", version);                      
+                    }
+			
+		    globalData["div25"] = getBarData(data, {div_name:"div25", attr1:'O'+version, attr2:"V", attr3:"", attr4:"D", label:"Y", type:"V"});
+                    globalData["div25AddSpace"] = getBarData(data, {div_name:"div25AddSpace", attr1:'NormO'+version, attr2:"V", attr3:"", attr4:"D", label:"Y", type:"V"});
+
+		    var rovChanges = rovChangesData.filter(function(row){ return row.Time==time;});
+		    rovChanges = rovChanges[0];
+		    title_param2 = get_title_param();		
+	            previous_time = rovChanges["PTime"];
+		    check_previous_time(previous_time);	
+		    globalData["div4"] = getDonutData(rovChanges, "V"+version, "", "", version);
+                }
+
+		function generate_Line_Charts()
+                {
+		    generateLineChart(globalData["div2"], "div2","# Unique Prefix-Origin pairs", div2.title, title_param);
+		    getBubble_chart(globalData["div3"], "div3","#RPKI-ROV Changes in IPv"+version, div3.title, title_param);
+		    getBubble_chart(valid_data, "div_Valid","# State Changes", div_Valid.title, title_param);
+		    getBubble_chart(nf_data, "div_NF","# State Changes", div_NF.title, title_param);
+		    getBubble_chart(invalid_data, "div_Invalid","# State Changes", div_Invalid.title, title_param);
+
+//                    generateLineChart(globalData["div3"], "div3","#RPKI-ROV Changes in IPv"+version, div3.title, title_param);
+//                    generateLineChart(valid_data, "div_Valid","# State Changes", div_Valid.title, title_param);
+//		    generateLineChart(nf_data, "div_NF","# State Changes", div_NF.title, title_param);
+//		    generateLineChart(invalid_data, "div_Invalid","# State Changes", div_Invalid.title, title_param);	
+		}
+
+		function timeFunction(time)
+                {
+                    time_str = time_format(time) ;
+		    title_param.time = time_str;	
+                    document.getElementById(time_label).innerHTML = "<B>Date:</B> : "+time_str;
+                    generate_Donut_Data(time);
+                    generateDonut(globalData["div1"], 'div1', div1.title, title_param); 
+                    if(rovNorm.length > 0)
+                    {
+                      generateDonut(globalData["divNorm1"], 'divNorm1', divNorm1.title, title_param);
+                    }     
+		    generateDonut(globalData["div4"], 'div4', (globalData["div4"][0].total > 0 ? div4.title : "There are no Changes during the selected time"), title_param2);
+		    generateBarChart(160, globalData["div25"], "div25", "Y", div25.title, {"labelX":"Prefix Count", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+                    generateBarChart(160, globalData["div25AddSpace"], "div25AddSpace", "Y", div25AddSpace.title, {"labelX":"Prefix Count (/24 equivalents)", "labelY":"", "legendX":"RPKI Validation"}, title_param);	
+		    document.getElementById("Desc_div4").innerHTML = div4.desc;
+                }
+
+		/*	List of selections	*/    
+                var main_div = document.getElementById("divs_list");
+		var divs = time_div(version, "All", "All", lastUpdate, "/ROV");
+                    
+                /*  Title data of selected page     */
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+
+		/* Global Object to store JSON Data for all the the div_Charts */
+                var globalData = {};
+		generate_Line_Data();
+                generate_Donut_Data(time);
+
+		var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+
+		/** Generate D3 CHARTS */
+                main_div.innerHTML += start_chart+chart_div(div1)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div25)+end_chart;
+                if(rovNorm.length > 0)
+                {
+                  main_div.innerHTML += start_chart+chart_div(divNorm1)+end_chart;
+		  main_div.innerHTML += start_chart+chart_div(div25AddSpace)+end_chart;	
+                }
+
+                main_div.innerHTML += start_chart+chart_div(div4)+end_chart;
+                main_div.innerHTML += start_chart+chart_div(div3)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div_Valid)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div_NF)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div_Invalid)+end_chart;
+
+		generate_Line_Charts();
+		generateDonut(globalData["div1"], 'div1', div1.title, title_param);
+    if(rovNorm.length > 0)
+    {
+      generateDonut(globalData["divNorm1"], 'divNorm1', divNorm1.title, title_param);
+    }
+		var donutChangesTitle = (globalData["div4"][0].total > 0 ? div4.title : "There are no Changes during the selected time");
+   		generateBarChart(160, globalData["div25"], "div25", "Y", div25.title, {"labelX":"Prefix Count", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+                generateBarChart(160, globalData["div25AddSpace"], "div25AddSpace", "Y", div25AddSpace.title, {"labelX":"Prefix Count (/24 equivalents)", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+                globalData["div4"][0]["type"]="RPKI-ROV Changes";
+                generateDonut(globalData["div4"], "div4", donutChangesTitle, title_param2);
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+
+

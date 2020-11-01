@@ -1,0 +1,113 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+	var pageType = "<%- pageType %>";
+    </script>
+
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/LineData.js"></script>
+    <script src="/javascripts/LineChart.js"></script>
+    <script src="/javascripts/Donut.js"></script>
+    <script src="/javascripts/DonutData.js"></script>
+    <!--Main layout-->
+    <main>
+      <div class="container-fluid">
+          <article class="content cards-page" id="divs_list">
+              <script>
+		// Get MongoDB Data
+                var version = '<%- version %>';
+                var time = '<%- time %>';
+                var value = '<%- value %>';
+                var time_str = time_format(time);
+                var rovData = <%- data %>;
+                var label, attr, collector, init_col, region, init_rir;
+		var global_title = "RPKI-ROV Analysis: Global Analysis ";
+
+		/* if it's region page	*/
+		if(pageType =="Region")
+		{
+			/* Get label for selected region	*/
+			label = rir_labels[value];
+			attr = "R";
+			collector = "All", init_col="All";
+			region = label, init_rir=value;
+			global_title += "(RIR: "+label+")";
+		}
+		else
+		{
+                        /* Get label for selected Collector        */
+                        label = col_labels[value];
+                        attr = "C";
+                        collector = label, init_col=value;
+                        region = "All", init_rir="All";
+			global_title += "(Collector: "+label+")";
+		}
+
+		/*  Title data of selected page     */
+                var title_param = {"title":" RPKI-ROV Analysis", "version":"IPv"+version, "col":collector, "rir":region, "time":time_str};
+
+                /* List of Functions  */
+                function generate_Donut_Data(time)
+                {
+		    var data = rovData.filter(function(row){ return row.Time==time;});
+                    data = data[0];
+                    globalData["div1"] = getDonutData(data, attr, value, "", version);
+                    globalData["divN1"] = getDonutData(data, attr, value, "", "N"+version);
+                }
+
+		function timeFunction(time)
+                {
+                    time_str = time_format(time) ;
+                    document.getElementById(time_label).innerHTML = "<B>Date:</B> : "+time_str;
+                    generate_Donut_Data(time);  
+                    generateDonut(globalData["div1"], 'div1', div1.title, title_param);  
+                    generateDonut(globalData["divN1"], 'divN1', divN1.title, title_param);                  
+                }
+
+                /*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                var divs = time_div(version, init_rir, init_col, lastUpdate, "/ROV");
+
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+		var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+
+                /* Global Object to store JSON Data for all the the div_Charts */
+                var globalData = {};
+		globalData["div2"] = getLineData(rovData, {rovData:"div2", attr1:['D'+version], attr2:attr, attr3:value, attr4:"", type:0, label:"V"});
+                generate_Donut_Data(time);
+
+		/** Generate D3 CHARTS */
+		var donut_desc = "The graph above represents a snapshot of RPKI validation results for unique Prefix-Origin pairs in "+pageType+" "+label;
+                var line_desc = "The graph above represents the history of validation results for unique Prefix-Origin pairs in "+pageType+" "+label;
+                var title = "Prefix Origins Validation in "+label;
+
+		div1 = {global_title:global_title, title:"IPv"+version+" "+title, div_name:"div1", desc:donut_desc};
+                div2 = {global_title:global_title, title:"IPv"+version+" "+title, div_name:"div2", desc:line_desc};
+                main_div.innerHTML += start_chart+chart_div(div1)+end_chart;
+    		main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+
+    var donut_descN = "The graph above represents a snapshot of RPKI validation results of Address Space (/24s) in "+pageType+" "+label;
+    var titleN = "Validation of Address Space (/24s) in "+label;            
+    divN1 = {global_title:global_title, title:"IPv"+version+" "+titleN, div_name:"divN1", desc:donut_descN};
+
+		if(pageType =="Region")
+                {
+                        main_div.innerHTML += start_chart+chart_div(divN1)+end_chart;
+                }
+
+		generateDonut(globalData["div1"], 'div1', div1.title, title_param);
+		generateLineChart(globalData["div2"], "div2","#IPv"+version+" Prefix-Origin pairs", div2.title, title_param);
+		
+    		generateDonut(globalData["divN1"], 'divN1', divN1.title, title_param);
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

@@ -1,0 +1,25 @@
+    <!-- Tooltips -->
+    <script type="text/javascript" src="/javascripts/popper.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="/javascripts/mdb.min.js"></script>
+<script async type="text/javascript" id="_fed_an_ua_tag" src="/javascripts/fed_an_ua_tag.js"></script>
+    <script>
+
+        // SideNav Initialization
+        $(".button-collapse").sideNav();
+
+        new WOW().init();
+
+        $(document).ready(function(){
+        $("#nist_header").prepend('<div id="nistheadergoeshere"></div>');
+        $("#nistheadergoeshere").load("/javascripts/boilerplate-header.html");
+
+        $("body").append('<div id="nistfootergoeshere"></div>');
+        $("#nistfootergoeshere").load("/javascripts/boilerplate-footer.html");
+    });
+    </script>
+
+</body>
+
+</html>
+

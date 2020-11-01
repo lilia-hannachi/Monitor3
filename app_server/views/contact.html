@@ -1,0 +1,60 @@
+<script>
+        var lastUpdate = "<%- lastUpdate %>";
+</script>
+
+<% include ./Page_Header.html %>   
+
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+        
+        
+                <!-- ********************************   Methodology ************************* -->
+		<div class="container contact-form">
+			<h1> Contact Form</h1>
+			<hr>
+			<div class="row">
+				<div class="col-md-6">
+					<address>Robust Inter-Domain Routing</address>
+					<p> Email: rov-monitor-dev@nist.gov</p>
+					<p> Phone: (301) 975-3630</p>
+				</div>
+				<div class="col-md-6">
+				         <div class="form-group">
+				         	<label>Name</label>
+				         	<input type="text" class="form-control">
+				         </div>
+				         <div class="form-group">
+				         	<label>Email</label>
+				         	<input type="text" class="form-control">
+				         </div>
+				         <div class="form-group">
+				         	<label>Massage</label>
+				         	<textarea  class="form-control" rows="7"></textarea>
+				         </div>
+					 <div class="form-group">
+				         	<button class="btn btn-primary btn-block">Send</button>
+				         </div>
+			       </div>
+			</div>
+		</div> </br>
+      </div>
+        
+    </main>
+    <!--/Main layout-->
+	
+
+    <div style="height:500px"></div>
+
+    <style>
+       .contact-form{
+	       background:rgba(0,0,0, .6);
+	       color:white;
+	       margin-top: 100px;
+               padding: 20px;
+	       box-shadow: 0px 0px 10px 3px grey;
+       }
+    </style>
+    <!-- SCRIPTS -->
+    <% include ./Footer.html %>

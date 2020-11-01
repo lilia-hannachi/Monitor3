@@ -1,0 +1,125 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/BarChart.js"></script>
+    <script src="/javascripts/BarData.js"></script>
+    <script src="/javascripts/LineData.js"></script>
+    <script src="/javascripts/LineChart.js"></script>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+                var main_div = document.getElementById("divs_list");
+                var rir_label = {"A":"ARIN", "R":"RIPE", "P":"APNIC", "F":"AFRINIC", "L":"LACNIC"};
+                // Get MongoDB Data
+                var data = <%- data1 %>;
+                
+                var data2 = <%- data2 %>;
+                
+                
+                /*  Time data */
+                var time = '<%- time %>';
+                var rir = '<%- rir %>';
+                var time_str = time_format(time);
+		                
+              	var global_title = "RPKI Repository: RPKI Data Analysis ("+rir_label+")";
+
+                var divs = repository_Selection(lastUpdate, rir);
+
+                /* Global Object to store the JSON Data of all the the div_Charts */
+                var globalData = {};
+                
+                var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+                var rirName = rir_label[rir];
+                /*  Title data of selected page     */
+                var title_param = {"title":"RPKI Repository Analysis", "version":"All", "col":"N/A", "rir":rirName, "time":time_str};
+                divs += page_title(title_param);
+                main_div.innerHTML += divs+table_div('table1');
+
+                function generate_Bar_Data()
+                {
+                    /*  Line Charts  */
+                    globalData["div01"] = getLineData(data2, {div_name:"div01", attr1:['C'], attr2:".cer", attr3:"", attr4:"", type:0, label:"P"});
+                    globalData["div02"] = getLineData(data2, {div_name:"div02", attr1:['C'], attr2:".roa", attr3:"", attr4:"", type:0, label:"P"});
+                    globalData["div03"] = getLineData(data2, {div_name:"div03", attr1:['C'], attr2:".crl", attr3:"", attr4:"", type:0, label:"P"});
+                    globalData["div04"] = getLineData(data2, {div_name:"div04", attr1:['C'], attr2:".mft", attr3:"", attr4:"", type:0, label:"P"});
+                    
+                    /*  Bar Charts  */
+                    globalData["div1"] = getBarData(data, {div_name:"div1", attr1:"AS_Roa_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div2"] = getBarData(data, {div_name:"div2", attr1:"Prefix_Length4_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div3"] = getBarData(data, {div_name:"div3", attr1:"Prefix_Length6_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div4"] = getBarData(data, {div_name:"div4", attr1:"Prefix_ML4_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div5"] = getBarData(data, {div_name:"div5", attr1:"Top_AS_Prefix_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div6"] = getBarData(data, {div_name:"div6", attr1:"Top_AS_Roa_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div7"] = getBarData(data, {div_name:"div7", attr1:"Prefix_ML6_"+rir, attr2:"", attr3:"", attr4:"", label:"N"});
+                }
+
+
+                /** Generate D3 Line CHARTS */
+                div01 = {global_title:global_title, title:"CERT Validation of the RPKI Repository for "+rirName, div_name:"div01", desc:""};
+                div02 = {global_title:global_title, title:"ROA Validation of the RPKI Repository for "+rirName, div_name:"div02", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div01)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div02)+end_chart;
+
+                /*  ******************* */
+                div03 = {global_title:global_title, title:"CRL Validation of the RPKI Repository for "+rirName, div_name:"div03", desc:""};
+                div04 = {global_title:global_title, title:"MFT Validation of the RPKI Repository for "+rirName, div_name:"div04", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div03)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div04)+end_chart;
+                
+                /** Generate D3 Bar CHARTS */
+                div1 = {global_title:global_title, title:"Number of ROAs Published per AS in "+rirName, div_name:"div1", desc:""};
+                div2 = {global_title:global_title, title:"IPV4 Prefix Length in "+rirName, div_name:"div2", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div1)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+
+                /*  ******************* */
+                div3 = {global_title:global_title, title:"IPV6 Prefix Length in "+rirName, div_name:"div3", desc:""};
+                div4 = {global_title:global_title, title:"IPV4 Prefix Max-Length in "+rirName, div_name:"div4", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div3)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div4)+end_chart;
+ 
+                 /*  ******************* */                
+                div7 = {global_title:global_title, title:"IPV6 Prefix Max-Length in "+rirName, div_name:"div7", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div7)+end_chart; 
+                
+                /*  ******************* */
+                div5 = {global_title:global_title, title:"25 Autonomous Systems that appear the most in ROAs in "+rirName, div_name:"div5", desc:""};
+                div6 = {global_title:global_title, title:"25 Autonomous Systems with the most Prefixes declared in ROAs in "+rirName, div_name:"div6", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div5)+end_chart;
+ 		main_div.innerHTML += start_chart+chart_div(div6)+end_chart;
+                  
+                function generate_Bar_Charts()
+                {
+                    /*  Line Charts  */
+                    generateLineChart(globalData["div01"], "div01","Cert Count", div01.title, title_param);
+                    generateLineChart(globalData["div02"], "div02","ROA Count", div02.title, title_param);
+                    generateLineChart(globalData["div03"], "div03","CRL Count", div03.title, title_param);
+                    generateLineChart(globalData["div04"], "div04","MFT Count", div04.title, title_param);
+                    
+                    /*  Bar Charts  */
+                    generateBarChart(50, globalData["div1"], "div1", "N", div1.title, {"labelX":"AS Count", "labelY":"Number of ROAs Published", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div2"], "div2", "N", div2.title, {"labelX":"IPV4 Prefix Count", "labelY":"Prefix Length", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div3"], "div3", "N", div3.title, {"labelX":"IPV6 Prefix Count", "labelY":"Prefix Length", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div4"], "div4", "N", div4.title, {"labelX":"IPV4 Prefix Count", "labelY":"Prefix Max-Length", "legendX":""}, title_param);
+                    generateBarChart(150, globalData["div5"], "div5", "N", div5.title, {"labelX":"ROA Count", "labelY":"", "legendX":""}, title_param);
+                    generateBarChart(150, globalData["div6"], "div6", "N", div6.title, {"labelX":"ROA Prefix Count", "labelY":"", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div7"], "div7", "N", div7.title, {"labelX":"IPV6 Prefix Count", "labelY":"Prefix Max-Length", "legendX":""}, title_param);
+                }
+		generate_Bar_Data();
+		generate_Bar_Charts();
+                generate_repo_rir_Table("table1", data["Data"], rir);
+
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>

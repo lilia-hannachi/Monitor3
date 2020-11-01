@@ -1,0 +1,187 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+
+    <!--Main layout-->
+    <main>
+      <div class="container-fluid">
+         <article class="content cards-page"  id="divs_list">
+		<script>
+		        document.getElementById('RPKI_changes_menu').className += " active";
+		        var data = <%- data %>;
+		        var time1 = '<%- Time1 %>';
+		        var time2 = '<%- Time2 %>';
+
+
+			var prefix_data = {4:new Array(), 6:new Array()};
+			/*      List of selections      */
+                	var main_div = document.getElementById("divs_list");
+		//	main_div.innerHTML += changes_ROA_Filter(4);
+			main_div.innerHTML += changes_ROA_Table(4);
+
+		//	main_div.innerHTML += changes_ROA_Filter(6);
+                        main_div.innerHTML += changes_ROA_Table(6);
+			
+			var main_Bar = "Chart", bar_Chart = "div_Chart", main_Prefixes = "Prefixes", tab_div = "table", filter_div = "filterDiv";
+			var perPage = 30;
+			/* Get data Function	*/
+
+			console.log(data);
+			if(data.length == 0)
+			{
+				alert("No Available data for the selected dates");
+			}
+
+			function generateData(data)
+        		{
+           			for(var i=0; i< data.length; i++)
+           			{
+                			var prefix = data[i]._id["Pr"];
+					var length = prefix.split("/");
+					var isIPV6 = (prefix.includes(":")) ? 6 : 4;
+					var arrAttr = [];
+					for(var j=0; j<data[i].docs.length; j++)	
+					{
+						var doc = data[i].docs[j];
+                				var origin = doc["AS"];
+                				var ml = doc["ML"];
+						var time = doc["T"][0];
+						var missing_time = (time == time1) ? time2 : time1;
+						var obj_T = {}
+						obj_T[time] = {"AS":origin, "ML":ml}
+                                                obj_T[missing_time] = {"AS":"-", "ML":"-"}
+                                                arrAttr.push(obj_T);
+					}
+					prefix_data[isIPV6].push({"Pr":prefix, "Ln":length[1], "doc":arrAttr});
+				}
+			}
+			
+			function getButton(class_name, val)
+        		{
+				if(val == "-")
+				{
+					return val;
+				}
+				else
+				{
+            				return "<button style='padding:0.5rem' type='button' class='btn btn-rounded btn-sm "+class_name+"'>"+val+"</button>";
+				}
+        		}
+
+			function initTable(ver)
+        		{
+                		return "<table class='table'><thead class='thead-dark text-center'><tr><B><th rowspan=2>IPV"+ver+" PREFIX</th> <th rowspan=2>Length</th><th colspan=3>"+time_format(time1)+"</th><th colspan=3>"+time_format(time2)+"</th></B></tr><tr><B><th>Origin</th><th>Max Length</th><th>Origin</th><th>Max Length</th></B></tr></thread>";
+        		}
+	
+			function nextPage(ver, current)
+        		{
+                		(ver ==4) ? generateTables(prefix_data[4], ver, current) : generateTables(prefix_data[6], ver, current);
+        		}
+
+
+			function generateCounter(total, ver, current)
+		        {
+                		var pages = Math.ceil(total / perPage);
+		                var counter = '';
+                		if (pages > 0)
+                		{
+		                        counter =' <ul class="pagination">';
+                		        if (current == 1) {
+                                		counter +='<li class="page-item disabled"><a class="page-link">First</a></li>';
+                        		}
+                        		else
+                        		{
+		                                counter +='<li class="page-item" onclick="nextPage('+ver+', 1)"><a class="page-link"> First </a></li>';
+                		        }
+                        		var i = (current > 5 ? current - 4 : 1)
+		                        if (i !== 1)
+                		        {
+                                		counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                        		}
+		                        for (; i <= (current + 4) && i <= pages; i++)
+                		        {
+                                		if (i == current)
+                                		{
+                                        		counter +='<li class="page-item active"><a class="page-link">'+i+'</a></li>';
+                                		}
+                                		else
+                                		{
+                                        		counter +='<li class="page-item"><a class="page-link" onclick="nextPage('+ver+','+i+')">'+i+'</a></li>';
+                                		}
+                                		if (i == current + 4 && i < pages)
+                                		{
+                                        		counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                		}
+                        		}
+                        		if (current == pages)
+                        		{
+		                                counter +='<li class="page-item disabled"><a class="page-link">Last</a></li>';
+                		        }
+		                        else
+                		        {
+                                		counter +='<li class="page-item"><a class="page-link" onclick="nextPage('+ver+','+pages+')">Last</li>';
+                        		}
+		                        counter +='</ul>';
+                		}
+                		return counter;
+        		}
+			
+
+			function generateTable(data, ver, current)
+        		{
+           			var table = initTable(ver);
+           			var init = (perPage * current) - perPage;
+           			var end = init + perPage;
+           			var maxVal = (data.length > end) ? end : data.length;
+           			for(var i=init; i< maxVal; i++)
+           			{
+                			var prefix = data[i]["Pr"];
+                			var length = data[i]["Ln"];
+                			var docs = data[i].doc;
+                			var lines = 0;
+                			var tds = "";
+			                for(var j=0; j<docs.length; j++)
+                			{
+						var td = "<td>"+getButton("btn-success", docs[j][time1]["AS"])+"</td><td>"+getButton("btn-success", docs[j][time1]["ML"])+"</td>";
+						td += "<td>"+getButton("btn-success", docs[j][time2]["AS"])+"</td><td>"+getButton("btn-success", docs[j][time2]["ML"])+"</td></tr>";
+						lines += 1;
+						tds += td; 
+					}
+					tds = "<tr><td rowspan="+lines+">"+prefix+"</td> <td rowspan="+lines+">"+length+"</td>"+tds;
+                			table +=tds;
+				}
+				table += "</table>";
+           			d3.select("#"+tab_div+ver).html(table + generateCounter(data.length, ver, current));
+                         }
+
+
+			function sort_By_Length(a, b)
+        		{
+                		return a.Ln - b.Ln;
+        		}
+			
+			function generateTables(data, ver, current)
+        		{
+            			if(Object.keys(data).length>0)
+            			{
+					data = data.sort(sort_By_Length);
+                			document.getElementById(main_Prefixes+ver).style.display = "block";
+//                			document.getElementById(filter_div+ver).style.display = "block";
+                			generateTable(data, ver, current);
+            			}
+        		}
+
+			generateData(data);
+			generateTables(prefix_data[4], 4, 1);
+			generateTables(prefix_data[6], 6, 1);
+		      //  Changes_ROA_Bar(version, type, "RPKI Validation Changes in IPV4 Prefix/Origin Pairs")
+	       </script>
+         </article>
+         <div style="height:500px"></div>
+      </div>
+    </main>
+    <!--/Main layout-->
+    <% include ../Footer.html %>
+
+

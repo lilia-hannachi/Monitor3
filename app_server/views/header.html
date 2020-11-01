@@ -1,0 +1,32 @@
+        <nav class="navbar navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav" style="height:120px">
+                
+            <!-- SideNav slide-out button -->
+            <div class="float-left">
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars"></i></a>
+            </div>
+            <!-- Breadcrumb-->
+            <div class="breadcrumb-dn mr-auto">
+		    <p><H4>NIST ROV Monitor</H4></p>
+            </div>
+           <!-- <ul class="nav navbar-nav nav-flex-icons ml-auto"> -->
+		<ul class="nav navbar-nav">
+		<li class="nav-item">
+                    <div class="nav-link"><span class="clearfix d-none d-sm-inline-block">Version: 2.0</span></div>
+                </li>	
+		<li class="nav-item">
+                    <div class="nav-link"><span id="LastUpdate" class="clearfix d-none d-sm-inline-block"></span></div>
+                </li>
+		<li class="nav-item">
+                    <a class="nav-link" href="https://www-x.antd.nist.gov:3000/"><i class="fa fa-home"></i><span class="clearfix d-none d-sm-inline-block">Home</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Contact"><i class="fa fa-envelope"></i> <span class="clearfix d-none d-sm-inline-block">Contact</span></a>
+                </li>
+                         
+            </ul>
+        </nav>  
+
+	<script>
+		document.getElementById("LastUpdate").innerHTML = "Last Update : " + time_format(lastUpdate);
+		
+	</script>

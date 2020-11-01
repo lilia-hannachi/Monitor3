@@ -1,0 +1,25 @@
+   <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <!--Main layout-->
+    <main>
+
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+                document.getElementById('RPKI_changes_menu').className += " active";
+                /*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                main_div.innerHTML += roa_prefix();
+
+                $('#time').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

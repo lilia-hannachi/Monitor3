@@ -1,0 +1,129 @@
+     <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/BarData.js"></script>
+    <script src="/javascripts/BarChart.js"></script>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+
+		// Get MongoDB Data
+                var version = '<%- version %>';
+		var time = '<%- time %>';
+                var data = <%- data %>;
+		var time_str = time_format(time);
+
+		var global_title = "RPKI-ROV Analysis: Valid Originations";
+
+		/*  Title data of selected page     */
+                var title_param = {"title":" Valid-ROV Analysis", "version":"IPv"+version, "col":"All", "rir":"all", "time":time_str};
+
+		/* List of Functions  */
+		function timeFunction(time)
+                {
+                        window.location.href= "Val/"+time+"/All/All/"+version;
+                }
+
+                function generate_Bar_Data(time)
+                {
+                    data = data[0];		
+		    globalData["div1"] = getBarData(data, {div_name:"div1", attr1:'O'+version, attr2:"V", attr3:"", attr4:"D", label:"Y", type:"V"});
+		    globalData["div5"] = getBarData(data, {div_name:"div5", attr1:'NormO'+version, attr2:"V", attr3:"", attr4:"D", label:"Y", type:"V"});	
+		    globalData["div2"] = getBarData(data, {div_name:"div2", attr1:'Cnt'+version, attr2:"V", attr3:"", attr4:"D", label:"Y", type:"V"});
+		    globalData["div6"] = getBarData(data, {div_name:"div6", attr1:'NormC'+version, attr2:"V", attr3:"", attr4:"D", label:"Y", type:"V"});	
+		    globalData["div3"] = getBarData(data, {div_name:"div3", attr1:'PrLV'+version, attr2:"", attr3:"V", attr4:"V", label:"N", type:"V"});
+		    globalData["div4"] = getBarData(data, {div_name:"div4", attr1:'PLV'+version, attr2:"", attr3:"V", attr4:"V", label:"N", type:"V"});
+                }
+
+                function generate_Bar_Charts(title1, title2, title3, title4, title5, title6)
+                {
+                    generateBarChart(160, globalData["div1"], "div1", "Y", title1, {"labelX":"Prefix Count", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+		    generateBarChart(160, globalData["div5"], "div5", "Y", title5, {"labelX":"Prefix Count (/24 equivalents)", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+                    generateBarChart(70, globalData["div2"], "div2", "Y", title2, {"labelX":"Prefix Count", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+		    generateBarChart(70, globalData["div6"], "div6", "Y", title6, {"labelX":"Prefix Count (/24 equivalents)", "labelY":"", "legendX":"RPKI Validation"}, title_param);
+                    generateBarChart(50, globalData["div3"], "div3", "N", title3, {"labelX":"Prefix Count", "labelY":"Prefix Length", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div4"], "div4", "N", title4, {"labelX":"Prefix Count", "labelY":"Path Length (# Unique ASs)", "legendX":""}, title_param);
+                }
+
+
+		/*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                var divs = time_div(version, "All", "All", lastUpdate, "/Val");
+
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+
+                /* Global Object to store the JSON Data of all the the div_Charts */
+                var globalData = {};
+		generate_Bar_Data(time);
+
+                /** Generate D3 CHARTS */
+                var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+
+                div1 = {global_title:global_title, title:"25 Autonomous Systems with the most Prefixes VALID by RPKI", div_name:"div1", desc:"The graph depicts the top 25 autonomous systems - Organizations based on the number of BGP originated prefixes valid by RPKI."};
+                div2 = {global_title:global_title, title:"25 ASN-Countries with the most Prefixes VALID by RPKI", div_name:"div2", desc:"The graph depicts the top 25 autonomous systems - Countries based on the number of BGP originated prefixes valid by RPKI."};
+		div5 = {global_title:global_title, title:"25 ASN-Organizations with the most Address Space (/24s) VALID by RPKI", div_name:"div5", desc:"The graph depicts the top 25 autonomous systems - Organizations by the size of address space (/24 equivalents) of BGP origination valid by RPKI."};
+                div6 = {global_title:global_title, title:"25 ASN-Countries with the most Address Space (/24s) VALID by RPKI", div_name:"div6", desc:"The graph depicts the top 25 autonomous systems - Countries by the size of address space (/24 equivalents) of BGP origination valid by RPKI."};
+
+                main_div.innerHTML += start_chart+chart_div(div1)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div5)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div6)+end_chart;
+
+                /*  ******************* */
+                div3 = {global_title:global_title, title:"Prefix Length according to IPv"+version+" Valid Prefix-Origin Pair", div_name:"div3", desc:"The graph above shows the number of Valid Prefix-Origin pairs in terms of prefix length."};
+                div4 = {global_title:global_title, title:"Path Length according to IPv"+version+" Valid Prefix-Origin Pairs", div_name:"div4", desc:"The graph above shows the number of Paths in the Valid Prefix-Origin pairs in terms of ASes number included in the BGP paths."};
+                main_div.innerHTML += start_chart+chart_div(div3)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div4)+end_chart;
+
+                generate_Bar_Charts(div1.title, div2.title, div3.title, div4.title, div5.title, div6.title);
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+	      </script>        
+            </article>
+            <div style="height:500px"></div>
+        </div>
+    </main>
+    <!--/Main layout-->    
+
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="/javascripts/jquery-3.3.1.min.js"></script>
+    <!-- Tooltips -->
+    <script type="text/javascript" src="/javascripts/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="/javascripts/mdb.min.js"></script>
+
+    <!-- CHARTS SCRIPTS -->
+    
+    
+    <script src="/javascripts/BarChart.js"></script>
+
+    <script>
+
+        // SideNav Initialization
+        $(".button-collapse").sideNav();
+        
+        new WOW().init();
+
+        $(document).ready(function(){
+        $("#nist_header").prepend('<div id="nistheadergoeshere"></div>');
+        $("#nistheadergoeshere").load("https://pages.nist.gov/nist-header-footer/boilerplate-header.html");
+    
+        $("body").append('<div id="nistfootergoeshere"></div>');
+        $("#nistfootergoeshere").load("https://pages.nist.gov/nist-header-footer/boilerplate-footer.html");
+    });
+    </script>
+
+</body>
+
+</html>

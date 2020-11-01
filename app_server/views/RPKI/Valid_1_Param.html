@@ -1,0 +1,90 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+	var pageType = "<%- pageType %>";
+    </script>
+
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/LineData.js"></script>
+    <script src="/javascripts/LineChart.js"></script>
+    <script src="/javascripts/Donut.js"></script>
+    <script src="/javascripts/DonutData.js"></script>
+    <!--Main layout-->
+    <main>
+      <div class="container-fluid">
+          <article class="content cards-page" id="divs_list">
+              <script>
+
+		// Get MongoDB Data
+                var version = '<%- version %>';
+                var time = '<%- time %>';
+                var value = '<%- value %>';
+                var time_str = time_format(time);
+                var rovData = <%- data %>;
+                var label, attr, collector, init_col, region, init_rir;
+
+		var global_title = "RPKI-ROV Analysis: Valid Originations ";
+
+		/* if it's region page	*/
+		if(pageType =="Region")
+		{
+			/* Get label for selected region	*/
+			label = rir_labels[value];
+			attr = "R";
+			collector = "All", init_col="All";
+			region = label, init_rir=value;
+			global_title += "(RIR: "+label+")";			 
+		}
+		else
+		{
+                        /* Get label for selected Collector        */
+                        label = col_labels[value];
+                        attr = "C";
+                        collector = label, init_col=value;
+                        region = "All", init_rir="All";
+			global_title += "(Collector: "+label+")";
+		}
+
+		/*  Title data of selected page     */
+                var title_param = {"title":" Valid-ROV Analysis", "version":"IPv"+version, "col":collector, "rir":region, "time":time_str};
+
+
+		function timeFunction(time)
+                {/*
+                    time_str = time_format(time) ;
+                    document.getElementById(time_label).innerHTML = "<B>Date:</B> : "+time_str;
+                    generate_Donut_Data(time);
+                    generateDonut(globalData["div1"], 'div1');     
+		 */               
+                }
+
+                /*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                var divs = time_div(version, init_rir, init_col, lastUpdate, "/Val");
+
+                divs += page_title(title_param);
+                main_div.innerHTML += divs;
+
+		var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+
+                /* Global Object to store JSON Data for all the the div_Charts */
+                var globalData = {};
+		globalData["div1"] = getLineData(rovData, {rovData:"div1", attr1:['D'+version], attr2:attr, attr3:value, attr4:"V", type:0, label:"V"});
+                
+		/** Generate D3 CHARTS */
+                var line_desc = "The graph above represents the history of validation results for valid unique Prefix-Origin pairs in "+pageType+" "+label;
+                var title = "Valid-ROV Prefix Origins Validation in "+label;
+
+		div1 = {global_title:global_title, title:"IPV"+version+" "+title, div_name:"div1", desc:line_desc};
+                main_div.innerHTML += start_chart+chart_div(div1)+end_chart;
+		generateLineChart(globalData["div1"], "div1","#IPv"+version+" Prefix-Origin pairs", div1.title, title_param);
+
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>

@@ -1,0 +1,76 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+
+    <!--Main layout-->
+    <main>
+
+        <div class="container-fluid">
+         <article class="content cards-page">
+		<section class="section" id='Chart'>
+                        <div class="row justify-content-center">
+                            <div class="col-xl-12">
+                                <div class="card card-info  table-responsive table-responsive-sm table-responsive-md">
+                                    <div class="card-header">
+                                        <div class="header-block">
+                                            <h5 class="title" id="title"></h5>
+                                        </div>
+                                    </div>
+                                    <div class="card-block"><br/>
+                                        <div id='div_Chart'></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+                <br/>
+           </article>
+		<div style="height:500px"></div>
+        </div>
+    </main>
+    <!--/Main layout-->
+
+    <script>
+	var prefix = '<%- Prefix %>';
+        var type = '<%- Type %>';
+        var parts = prefix.split("_");
+        var data = <%- data %>;
+
+        getPrefixes();
+
+	function getPrefixes()
+        {
+        	var tab = '';
+                var arr = new Array();
+                var prefix2 = prefix.replace("_", "/");
+                for(var i=0; i<data.length; i++)
+                {
+                	var insertVal = data[i].O+"_"+data[i].Pr;
+                        if(arr.indexOf(insertVal) < 0 && data[i].Pr != prefix2 && data[i].Pr != "0.0.0.0/0")
+                        {
+                        	arr.push(insertVal);
+                        }
+                 }
+                 if(arr.length > 0)
+                 {
+                        tab = '<table class="table">';
+                        for(var i=0; i<arr.length; i++)
+                        {
+ 	                       var parts2 = arr[i].split("_");
+                               tab += '<tr><td>'+parts2[0]+'</td><td> <a href="/PrefixOVal/'+parts2[1].replace("/", "|")+'">'+parts2[1]+'</a></td></tr>';
+                        }
+                        tab += '</table>';
+                 }
+                 else
+                 {
+                        tab = '<table class="table" ><tr><th><B> There are no '+type+' specific Prefixes... </B></th></tr></table>';
+                 }
+                 document.getElementById("div_Chart").innerHTML += tab;
+		 document.getElementById("title").innerHTML = type+' specific Prefixes for: '+prefix2;
+         }
+
+    </script>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>

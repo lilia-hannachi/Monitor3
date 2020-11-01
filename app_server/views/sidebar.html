@@ -1,0 +1,90 @@
+<!-- Sidebar navigation -->
+
+        <div id="slide-out" class="side-nav sn-bg-4 fixed">
+            <ul class="custom-scrollbar">
+                <!-- Logo -->
+                <li>
+                    <div class="logo-wrapper">
+                        <a href="https://www.nist.gov/itl/antd"><img src="/images/ITL_Small.png" class="img-fluid flex-center"></a>
+                    </div>
+                </li>
+                <!--/. Logo -->
+                
+                <!-- Side navigation links -->
+                <li>
+                    <ul class="collapsible big_labels" data-collapsible = "expandable">
+                            <li><a class="collapsible-header waves-effect active"><i class="fa fa-expeditedssl"></i> RPKI-ROV Analysis</a> 
+                            <div class="collapsible-body"> 
+                                <ul class="collapsible"data-collapsible = "expandable">
+                                    <li> <a href="/ROV" class="collapsible-body" style="color:white;"> Global Analysis</a></li>
+
+                                    <li> <a href="/Val" class="collapsible-body" style="color:white;">Valid Originations </a> </li>
+
+                                    <li> <a href="/NF" class="collapsible-body" style="color:white;"> Not-Found Originations</a></li>
+
+                                    <li> <a href="/Inv" class="collapsible-body" style="color:white;"> Invalid Originations</a></li>
+                                    <li> <a class="collapsible-header waves-effect arrow-r" id="coverage_menu" style="color:white;"> Coverage of Invalids<i class="fa fa-angle-down rotate-icon"></i></a>
+                                        <div class="collapsible-body">
+                                                <ul class="list-unstyled">
+							<li>
+                                                            <a href="/Cov" class="waves-effect">All Invalid Originations</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/CovD" class="waves-effect">Coverage details</a>
+                                                        </li>
+							<li>
+                                                            <a href="/Cov_Val" class="waves-effect">Coverage-Validation</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/Cov_RIR" class="waves-effect">Coverage-Region</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/Cov_Pref" class="waves-effect">Invalid Prefix/Origin</a>
+                                                        </li>
+                                                </ul>
+                                        </div>
+				    </li>
+
+                                    <li> <a class="collapsible-header waves-effect arrow-r" id="changes_menu" style="color:white;"> ROV Changes<i class="fa fa-angle-down rotate-icon"></i></a>
+                                        <div class="collapsible-body">
+                                                <ul class="list-unstyled">
+                                                        <li>
+                                                            <a href="/ROVChang" class="waves-effect">All Changes</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/PrefixVal" class="waves-effect">Specific Prefix</a>
+                                                        </li>
+                                                </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div> 
+                        </li>
+			
+			<li><a class="collapsible-header waves-effect active"><i class="fa fa-vcard-o"></i> RPKI Repository</a>
+                            <div class="collapsible-body">
+                                <ul class="collapsible"data-collapsible = "expandable">
+                                    <li> <a href="/RPKI" class="collapsible-body" style="color:white;">RPKI Data Analysis</a></li>
+				    <li> <a class="collapsible-header waves-effect arrow-r" id="RPKI_changes_menu" style="color:white;"> RPKI Repository Changes<i class="fa fa-angle-down rotate-icon"></i></a>
+					<div class="collapsible-body">
+                                                <ul class="list-unstyled">
+                                                        <li>
+                                                            <a href="/ROAChang" class="waves-effect">All Changes</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/ROAPrefix" class="waves-effect">Specific ROA Prefix</a>
+                                                        </li>
+                                                </ul>
+                                        </div>
+				    </li>
+				</ul>
+			     </div>
+                        </li>
+
+			<li><a class="collapsible-header waves-effect active" href="/Methodology"><i class="fa fa-vcard-o"></i>Methodology Page</a> </li>		     
+                    </ul>
+                </li>
+                <!--/. Side navigation links -->
+            </ul>
+            <div class="sidenav-bg mask-strong"></div>
+        </div>

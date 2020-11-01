@@ -1,0 +1,97 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+
+    <!--Main layout-->
+    <main>
+	<div class="container-fluid">
+         <article class="content cards-page">
+                <section class="section">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-10">
+                                <div id='Hierarchy'></div>
+                            </div>
+                        </div>
+                </section>
+                <br/>
+                <section class="section">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-10">
+                                        <div id='details'></div>
+                            </div>
+                        </div>
+                </section>
+                <br/>
+           </article>
+                <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <script>
+	var time = '<%- Time %>';
+        var data = <%- data %>;
+        var tree = '<%- Tree %>';
+
+        var arr = tree.split(" ");
+        var str = "";
+        getList(arr, 0, 0);
+
+        document.getElementById("Hierarchy").innerHTML += str;
+
+        function getList(arr, i, roa)
+        {
+        	str += '<nav class="navbar"><ul class="nav">';
+                if(roa == 1)
+                {
+                	str += '&nbsp;&nbsp;&nbsp;&nbsp;<li class="nav-item"><a class="nav-link none_decoration" href="/ROAs/'+time+'/'+arr[i]+'"><i class="fa fa-angle-double-right"></i><span class="clearfix d-none d-sm-inline-block">'+arr[i]+'</span></a>';
+                }
+                else
+                {
+                        str += '&nbsp;&nbsp;&nbsp;&nbsp;<li class="nav-item"><a class="nav-link none_decoration" href="/Certs/'+time+'/'+arr[i]+'/'+tree+'"><i class="fa fa-angle-double-right"></i><span class="clearfix d-none d-sm-inline-block">'+arr[i]+'</span></a>';
+                }
+                i++;
+                if(i < arr.length)
+                {
+                        if(i == arr.length-1)
+                        {
+            	            getList(arr, i, 1);
+                        }
+                        else
+                        {
+                            getList(arr, i, 0);
+                        }
+                 }
+                 str += '</li></ul></nav>';
+        }
+        getDetails();
+
+	function getDetails()
+        {
+                 var tab1 = '<table class="table" style="background:white"><thead class="thead-dark"><tr><th><B>FileName</B></th><td>'+data[0].F+'</td></tr>';
+                 tab1 += '<tr><th><B>Subject</B></th><td>'+data[0].S+'</td></tr>';
+                 tab1 += '<tr><th><B>Validity Period</B></th><td>'+data[0].V+'</td></tr>';
+                 tab1 += '<tr><th><B>Serial Nr</B></th><td>'+data[0].SN+'</td></tr>';
+                 tab1 += '<tr><th><B>Issuer</B></th><td>'+data[0].I+'</td></tr>';
+                 tab1 += '<tr><th><B>Subject KI</B></th><td>'+data[0].SK+'</td></tr>';
+                 tab1 += '<tr><th><B>Public Key</B></th><td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">'+data[0].PK+'</td></tr>';
+                 tab1 += '<tr><th><B>TA</B></th><td>'+data[0].TA+'</td></tr>';
+                 tab1 += '<tr><th><B>EE</B></th><td>'+data[0].EE+'</td></tr>';
+                 tab1 += '</thead></table>';
+  
+                 document.getElementById("details").innerHTML += tab1+"</br></br>";
+
+                 var tab2 = '<div class="row justify-content-center"><div class="col-xl-10"><table class="table" style="background:white"><thead class="thead-dark"><tr><th><B>Ressources</B></th></tr></thead></tbody>';
+                 for(var i=0; i<data[0].Rs.length; i++)
+                 {
+                        tab2 += '<tr><td>'+data[0].Rs[i].R+'</td></tr>';
+                 }
+                 tab2 += '</tbody></table></div></div>';
+                 document.getElementById("details").innerHTML += tab2;
+         }
+
+    </script>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

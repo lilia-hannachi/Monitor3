@@ -1,0 +1,71 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/TimeAxis.js"></script>
+    <!--Main layout-->
+    <main>
+
+        <div class="container-fluid">
+         <article class="content cards-page">
+                <section class="section" id='Chart' style="display:none;">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-12">
+                                <div class="card card-info">
+                                    <div class="card-header">
+                                        <div class="header-block">
+                                            <h5 class="title" id="title"></h5>
+                                        </div>
+                                    </div>
+                                    <div class="card-block"><br/>
+					<div id='legend'></div>
+                                    	<div id='div_Chart'></div>
+					<center><div id="btn"></div></center>
+                                    </div>
+                                </div>
+                            </div>
+			</div>
+		</section>
+		<br/>
+		<section class="section" id='ROA' style="display:none;">
+                        <div class="row justify-content-center">
+                            <div class="col-xl-12">
+                                <div class="card card-info  table-responsive table-responsive-sm table-responsive-md">
+                                    <div class="card-header">
+                                        <div class="header-block">
+                                            <h5 class="title" id="ROA_title"></h5>
+                                        </div>
+                                    </div>
+                                    <div class="card-block"><br/>
+                                        <div id='div_ROA'></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+                <br/>
+           	</article>
+		<div style="height:500px"></div>
+        </div>
+    </main>
+    <!--/Main layout-->
+
+    <script>
+	var data = <%- data %>;
+
+        var prefix = '<%- prefix %>';
+        var from = data[0]["F"];
+	var to = data[0]["To"];
+        var div = document.getElementById("Chart");
+        div.style.display = "block";
+	var moreLink = '/More/'+prefix.replace("/", "_")+'/'+from+'/'+to;
+    	var lessLink = '/Less/'+prefix.replace("/", "_")+'/'+from+'/'+to;
+        document.getElementById("btn").innerHTML += '<br/><button type="submit" class="btn btn-primary btn-md"><a href="'+moreLink+'">More Specific</a></button>&nbsp;&nbsp;&nbsp;';
+        document.getElementById("btn").innerHTML += '<button type="submit" class="btn btn-primary btn-md"><a href="'+lessLink+'">Less Specific</a></button>';
+        document.getElementById("title").innerHTML += 'Validation of Prefix '+prefix+'</br>';
+        createChart(data);
+	
+    </script>
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+

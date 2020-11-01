@@ -1,0 +1,127 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+
+    <% include ../Page_Header.html %>
+    <script src="/javascripts/BarChart.js"></script>
+    <script src="/javascripts/BarData.js"></script>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+                var main_div = document.getElementById("divs_list");
+                // Get MongoDB Data
+                var data = <%- data %>;
+                data = data[0];
+                /*  Time data */
+                var time = '<%- time %>';
+                var time_str = time_format(time);
+
+		var global_title = "RPKI Repository: RPKI Data Analysis";
+
+                var divs = repository_Selection(lastUpdate, "All");
+
+                /* Global Object to store the JSON Data of all the the div_Charts */
+                var globalData = {};
+                
+                var start_chart = '<section class="section"><div class="row">';
+                var end_chart = '</div></section><br/>';
+                
+                /*  Title data of selected page     */
+                var title_param = {"title":"Global RPKI Repository Analysis", "version":"All", "col":"N/A", "rir":"all", "time":time_str};
+                divs += page_title(title_param);
+                main_div.innerHTML += divs+table_div('table1');
+
+                function generate_Bar_Data()
+                {
+                    globalData["div1"] = getBarData(data, {div_name:"div1", attr1:"D", attr2:"Cert_Depth", attr3:"", attr4:"", label:"Y"});
+                    globalData["div2"] = getBarData(data, {div_name:"div2", attr1:"D", attr2:"Add_Block_4", attr3:"", attr4:"", label:"Y"});
+                    globalData["div3"] = getBarData(data, {div_name:"div3", attr1:"D", attr2:"Add_24", attr3:"", attr4:"", label:"Y"});
+                    globalData["div4"] = getBarData(data, {div_name:"div4", attr1:"D", attr2:"Add_Block_6", attr3:"", attr4:"", label:"Y"});
+                    globalData["div5"] = getBarData(data, {div_name:"div5", attr1:"AS_Roa", attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div6"] = getBarData(data, {div_name:"div6", attr1:"Num_Roa", attr2:"", attr3:"", attr4:"", label:"Y"});
+                    globalData["div7"] = getBarData(data, {div_name:"div7", attr1:"Total_V4", attr2:"", attr3:"", attr4:"", label:"Y"});
+                    globalData["div8"] = getBarData(data, {div_name:"div8", attr1:"Unique_V4", attr2:"", attr3:"", attr4:"", label:"Y"});
+                    globalData["div9"] = getBarData(data, {div_name:"div9", attr1:"Prefix_Length4", attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div10"] = getBarData(data, {div_name:"div10", attr1:"Prefix_Length6", attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div11"] = getBarData(data, {div_name:"div11", attr1:"Prefix_ML4", attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div12"] = getBarData(data, {div_name:"div12", attr1:"Prefix_ML6", attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div13"] = getBarData(data, {div_name:"div13", attr1:"Top_AS_Roa", attr2:"", attr3:"", attr4:"", label:"N"});
+                    globalData["div14"] = getBarData(data, {div_name:"div14", attr1:"Top_AS_Prefix", attr2:"", attr3:"", attr4:"", label:"N"});
+                }
+
+                /** Generate D3 CHARTS */
+                div1 = {global_title:global_title, title:"Distribution of RPKI Certificate Path Depths Including ROA EEs", div_name:"div1", desc:"This graph shows the number of certificates at various levels of certificate-path depth within the RPKI hierarchy (for each RIR)"};
+                div2 = {global_title:global_title, title:"Number of IPv4 Address Blocks Contained in CA Certificates", div_name:"div2", desc:"This graph shows the number of IPv4 address blocks (regardless of block size) declared in CAs certs at various levels of certificate-path depth within the RPKI hierarchy. TA certs and EEs for the ROA are not considered for generating this graph."};
+                main_div.innerHTML += start_chart+chart_div(div1)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div2)+end_chart;
+                /*  ******************* */
+                div3 = {global_title:global_title, title:"Normalized IPv4 Address Space Contained in CA Certs", div_name:"div3", desc:"This graph shows normalized IPv4 address space in /24s declared in CAs at various levels of certificate-path depth within the RPKI hierarchy. TA certs and EEs for the ROA are not considered for generating this graph."};
+                div4 = {global_title:global_title, title:"Number IPv6 Address Blocks Contained in CA Certs", div_name:"div4", desc:"This graph shows the number of IPv6 address blocks (regardless of block size) declared in CAs certs at various levels of certificate-path depth within the RPKI hierarchy. TA certs and EEs for the ROA are not considered for generating this graph."};
+                main_div.innerHTML += start_chart+chart_div(div3)+end_chart;
+                main_div.innerHTML += start_chart+chart_div(div4)+end_chart;
+                         
+                /*  ******************* */
+                div5 = {global_title:global_title, title:"Number of ROAs Published per AS", div_name:"div5", desc:"Each ROA contains exactly one AS number (ASN), but each ASN can appear in multiple ROAs."};
+                div6 = {global_title:global_title, title:"Number of ROAs Published per RIR", div_name:"div6", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div5)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div6)+end_chart;
+ 
+                /*  ******************* */
+                div7 = {global_title:global_title, title:"Number of total ROA IPV4 Prefixes", div_name:"div7", desc:""};
+                div8 = {global_title:global_title, title:"Number of unique ROA IPV4 Prefixes", div_name:"div8", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div7)+end_chart;   
+		main_div.innerHTML += start_chart+chart_div(div8)+end_chart;
+
+                /*  ******************* */
+                div9 = {global_title:global_title, title:"IPV4 Prefix Length in ROAs", div_name:"div9", desc:""};
+                div10 = {global_title:global_title, title:"IPV6 Prefix Length in ROAs", div_name:"div10", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div9)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div10)+end_chart;
+                         
+                /*  ******************* */
+                div11 = {global_title:global_title, title:"IPV4 Prefix Max-Length in ROAs", div_name:"div11", desc:""};
+                div12 = {global_title:global_title, title:"IPV6 Prefix Max-Length in ROAs", div_name:"div12", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div11)+end_chart;
+		main_div.innerHTML += start_chart+chart_div(div12)+end_chart;
+ 
+                /*  ******************* */
+                div13 = {global_title:global_title, title:"25 Autonomous Systems that appear the most in ROAs", div_name:"div13", desc:""};
+                div14 = {global_title:global_title, title:"25 Autonomous Systems with the most Prefixes declared in ROAs", div_name:"div14", desc:""};
+                main_div.innerHTML += start_chart+chart_div(div13)+end_chart;  
+		main_div.innerHTML += start_chart+chart_div(div14)+end_chart;
+
+                function generate_Bar_Charts()
+                {
+                    generateBarChart(50, globalData["div1"], "div1", "Y", div1.title, {"labelX":"Cert Count", "labelY":"", "legendX":"Certificate Path Depth"}, title_param);
+                    generateBarChart(50, globalData["div2"], "div2", "Y", div2.title, {"labelX":"IPV4 Block Count", "labelY":"", "legendX":"Certificate Path Depth"}, title_param);
+                    generateBarChart(50, globalData["div3"], "div3", "Y", div3.title, {"labelX":"/24 Count", "labelY":"", "legendX":"Certificate Path Depth"}, title_param);
+                    generateBarChart(50, globalData["div4"], "div4", "Y", div4.title, {"labelX":"IPV6 Block Count", "labelY":"", "legendX":"Certificate Path Depth"}, title_param);
+                    generateBarChart(50, globalData["div5"], "div5", "N", div5.title, {"labelX":"AS Count", "labelY":"Number of ROAs Published", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div6"], "div6", "Y", div6.title, {"labelX":"ROA Count", "labelY":"", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div7"], "div7", "Y", div7.title, {"labelX":"Prefix Count", "labelY":"", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div8"], "div8", "Y", div8.title, {"labelX":"Prefix Count", "labelY":"", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div9"], "div9", "N", div9.title, {"labelX":"IPV4 Prefix Count", "labelY":"Prefix Length", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div10"], "div10", "N", div10.title, {"labelX":"IPV6 Prefix Count", "labelY":"Prefix Length", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div11"], "div11", "N", div11.title, {"labelX":"IPV4 Prefix Count", "labelY":"Prefix Max-Length", "legendX":""}, title_param);
+                    generateBarChart(50, globalData["div12"], "div12", "N", div12.title, {"labelX":"IPV6 Prefix Count", "labelY":"Prefix Max-Length", "legendX":""}, title_param);
+                    generateBarChart(150, globalData["div13"], "div13", "N", div13.title, {"labelX":"ROA Count", "labelY":"", "legendX":""}, title_param);
+                    generateBarChart(150, globalData["div14"], "div14", "N", div14.title, {"labelX":"ROA Prefix Count", "labelY":"", "legendX":""}, title_param);
+                }
+
+		generate_Bar_Data();
+		generate_Bar_Charts();
+               	generate_repo_Table("table1", data["Data"]);
+		$('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
+
+    

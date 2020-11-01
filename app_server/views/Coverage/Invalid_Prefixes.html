@@ -1,0 +1,114 @@
+    <script>
+        var lastUpdate = "<%- lastUpdate %>";
+    </script>
+    <% include ../Page_Header.html %>
+    <!--Main layout-->
+    <main>
+        
+        <div class="container-fluid">
+         <article class="content cards-page" id="divs_list">
+            <script>
+		document.getElementById('coverage_menu').className += " active";
+                // Get MongoDB Data
+                var version = '<%- version %>';
+                var time = '<%- time %>';
+		var coverageData = <%- data %>;
+		var invalid_Data = coverageData[0];
+		var current = <%- current %>;
+
+		var time_str = time_format(time);
+
+		/*  List of functions  */
+		function generateTable()
+                {
+	                var data = invalid_Data["InvPr"+version];
+                        var rirArray = {"A":"ARIN", "R":"RIPE", "P":"APNIC", "L":"LACNIC", "F":"AFRINIC"};
+                        var Validation = {"IM":"Invalid:ML", "IS":"Invalid:AS", "ISM":"invalid:AS-ML"};
+                        var Validation_col = {"IM":"btn btn-deep-purple", "IS":"btn-mdb-color", "ISM":"btn-unique"};
+                        var table = "<table class='table table-bordered'><thead><tr> <th><B>Prefix</B></th> <th><B>Origin</B></th> <th><B>Region</B></th> <th><B>Validation</B></th> <th><B>Path Count</B></th> <th><B>Covered</B></th></tr></thead><tbody>";
+                                for(var i = 0; i < data.length; i++)
+                                {
+                                        table += "<tr><td>"+data[i].Pr+"</td><td>"+data[i].O+"</td><td>"+rirArray[data[i].R]+"</td>"+getValValue(Validation[data[i].V], Validation_col[data[i].V])+"<td>"+data[i].PC+"</td>";
+                                            if(data[i].C == "Y")
+                                        {
+                                                    table += "<td><button type='button' class='btn btn-rounded btn-success btn-sm'> <a href=\'/CovPr/"+time+"/"+version+"/"+(data[i].Pr).replace("/", "_")+"\' >YES </a> </button></td></tr>";
+                                        }
+                                        else{
+                                                    table += "<td><button type='button' class='disabled btn btn-rounded btn-danger btn-sm'>NO</button></td></tr>";
+                                        }
+                                }
+                        table += "</tbody> </table>";
+			return table
+                }
+
+
+		function counterVal()
+                {
+                        var perPage = 100;
+                        var pages = Math.ceil(invalid_Data["T_Pr"+version] / perPage);
+                        var ver = (version=="6" ? version : "");
+                        if (pages > 0)
+                        {
+                                var counter ='<ul class="pagination">';
+                                if (current == 1) {
+                                        counter +='<li class="page-item disabled"><a class="page-link">First</a></li>';
+                                }
+                                else
+                                {
+                                        counter +='<li class="page-item"><a class="page-link" href="/Cov/'+time+'/'+version+'/1">First</a></li>';
+                                }
+                                var i = (current > 5 ? current - 4 : 1)
+                                if (i !== 1)
+                                {
+                                        counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                }
+
+                                for (; i <= (current + 4) && i <= pages; i++)
+                                {
+                                        if (i == current)
+                                        {
+                                                counter +='<li class="page-item active"><a class="page-link">'+i+'</a></li>';
+                                        }
+                                        else
+                                        {
+                                                counter +='<li class="page-item"><a  class="page-link" href="/Cov/'+time+'/'+version+'/'+i+'">'+i+'</a></li>';
+                                        }
+                                        if (i == current + 4 && i < pages)
+                                        {
+                                                counter +='<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                        }
+                                }
+                                if (current == pages)
+                                {
+                                        counter +='<li class="page-item disabled"><a class="page-link">Last</a></li>';
+                                }
+                                else
+                                {
+                                        counter +='<li class="page-item"><a class="page-link" href="/Cov/'+time+'/'+version+'/'+pages+'">Last</a></li>';
+                                }
+                                counter +='</ul>';
+                        }
+                        return counter;
+                }
+
+		/*      List of selections      */
+                var main_div = document.getElementById("divs_list");
+                var divs = coverage_Invalid_div(version, "All", "All", lastUpdate);
+                /*  Title data of selected page     */
+                var title_param = {"title":"Invalid Prefix-Origin Pairs", "version":"IPv"+version, "col":"All", "rir":"all", "time":time_str};
+                divs += page_title(title_param);
+                
+                main_div.innerHTML += divs;
+
+		main_div.innerHTML += table_div('div1');
+                document.getElementById("div1").innerHTML = generateTable() + counterVal();
+
+                $('#datepicker').datepicker({ uiLibrary: 'bootstrap4' });
+              </script>
+          </article>
+        <div style="height:500px"></div>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <% include ../Footer.html %>
